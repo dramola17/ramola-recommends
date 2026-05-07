@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 
-const GEMINI_URL = "/api/chat";
+const API_URL = "/api/chat";
 const SYSTEM_PROMPT = `You are a sharp, knowledgeable movie recommendation assistant with exceptional taste. You know Indian streaming platforms inside out. You are "Ramola Recommends" — a curated movie recommendation bot made by Dramola.
 
 YOUR PERSONALITY:
@@ -101,15 +101,19 @@ export default function RamolaRecommends() {
     ];
 
     try {
-      const res = await fetch(GEMINI_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
-          contents: geminiHistory,
-          generationConfig: { maxOutputTokens: 1200, temperature: 0.7 }
-        })
-      });
+      const res = await fetch(API_URL, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    model: "claude-haiku-4-5-20251001",
+    max_tokens: 1200,
+    system: SYSTEM_PROMPT,
+    messages: messages
+      .filter(m => m.role === "user" || m.role === "assistant")
+      .concat([{ role: "user", content: buildUserText(rawText) }])
+      .map(m => ({ role: m.role, content: m.content }))
+  })
+});
 
       if (res.status === 429 || res.status === 403) {
         setCreditsOver(true);
@@ -118,7 +122,7 @@ export default function RamolaRecommends() {
       }
 
       const data = await res.json();
-      const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Something went wrong. Try again!";
+      const reply = data?.content?.[0]?.text || "Something went wrong. Try again!";
       setMessages(prev => [...prev, { role: "model", content: reply }]);
     } catch {
       setCreditsOver(true);
