@@ -67,7 +67,7 @@ const WELCOME_MESSAGE = {
 };
 
 const GENRES = ["Any Genre", "Thriller / Mystery", "True Story / Biopic", "Sci-Fi", "Drama", "Dark / Gritty", "Action", "Comedy", "Feel-Good", "Horror", "Romance", "Crime", "Documentary", "Animation"];
-const PLATFORMS = ["Any Platform", "Netflix", "Prime Video", "JioHotstar", "ZEE5", "MUBI", "Apple TV+", "YouTube"];
+const PLATFORMS = ["Any Platform", "Netflix", "Prime Video", "JioHotstar", "ZEE5", "MUBI", "Apple TV+", "SonyLIV"];
 const CONTENT_TYPES = ["Any", "Movies Only", "Shows Only"];
 const INDUSTRY = ["Any", "Bollywood", "Hollywood", "South Indian", "European", "Korean"];
 function formatMessage(text) {
