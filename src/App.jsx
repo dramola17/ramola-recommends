@@ -54,7 +54,7 @@ YOUR RULES:
 
 const WELCOME_MESSAGE = {
   role: "assistant",
-  content: "Hey! Welcome to Ramola Recommends. Curated picks, zero fluff, always with where to watch in India.\n\nTwo quick things:\n\n1. **Languages you're open to?** (Hindi, English, South Indian, International or all?)\n2. **Anything you absolutely don't want?** (horror, sappy romance, slow arthouse, no subtitles, etc.)\n\nSet your filters up top or just type below what you feel like watching!"
+  content: "Hey! Welcome to Ramola Recommends. Curated picks, zero fluff, always with where to watch in India.\n\nSet your filters up top or just type below what you feel like watching!\n\nFor further customisation, tell me:\n\n1. Languages you're open to? (Hindi, English, South Indian, International or all?)\n2. Anything you absolutely don't want? (horror, sappy romance, slow arthouse, no subtitles, etc.)\n\nHappy watching!"
 };
 
 const GENRES = ["Any Genre", "Thriller / Mystery", "True Story / Biopic", "Sci-Fi", "Drama", "Dark / Gritty", "Action", "Comedy", "Feel-Good", "Horror", "Romance", "Crime", "Documentary", "Animation"];
