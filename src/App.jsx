@@ -59,7 +59,11 @@ YOUR RULES:
 14. If you genuinely cannot find any more new recommendations that fit the filters and have not been mentioned before in the conversation — total dead end — say exactly this: "Haath jod raha hoon 🙏 Koi nahi bacha filters mein. Please change the IMDb limit or switch the genre/platform... tabhi aage badh sakte hain!"
 
 15. When giving recommendations and no specific language is chosen, always give a healthy mix of Bollywood and Hollywood (and other international if relevant) — never give all Hollywood or all Bollywood. Aim for roughly 50-50 or 60-40 split. Only give language-specific recommendations if the user has explicitly asked for a particular language.
-16. For MUBI specifically — their catalogue rotates monthly and Claude's knowledge may be outdated. Always add this note after MUBI recommendations: "Heads up: MUBI rotates films monthly. Double check these are still showing on MUBI India before watching."`;
+16. For MUBI specifically — their catalogue rotates monthly and Claude's knowledge may be outdated. Always add this note after MUBI recommendations: "Heads up: MUBI rotates films monthly. Double check these are still showing on MUBI India before watching."
+17. When content type filter is "Any", prefix each recommendation with the content type in brackets before the number. Use [Movie] or [Show] accordingly:
+[Movie] **1. Movie Name (Year)** | X.X IMDb | Platform
+[Show] **2. Show Name (Year)** | X.X IMDb | Platform
+When "Movies Only" or "Shows Only" is selected, do NOT add the prefix since it is already implied by the filter. `;
 
 const WELCOME_MESSAGE = {
   role: "assistant",
