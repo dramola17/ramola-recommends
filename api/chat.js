@@ -25,17 +25,15 @@ export default async function handler(req, res) {
 
     if (imdbMin > 0 && data?.content?.[0]?.text) {
       const lines = data.content[0].text.split("\n");
-      const filtered = lines.filter(line => {
-        // Check if line has an IMDb rating pattern like "7.2 IMDb" or "| 7.2 IMDb"
-        const ratingMatch = line.match(/\|\s*(\d+\.\d+)\s*IMDb/i);
-        if (ratingMatch) {
-          const rating = parseFloat(ratingMatch[1]);
-          return rating >= imdbMin;
-        }
-        // Keep all non-recommendation lines (prose, questions, etc.)
-        return true;
-      });
-      data.content[0].text = filtered.join("\n");
+const filtered = lines.filter(line => {
+  const ratingMatch = line.match(/(\d+\.\d+)\s*IMDb/i);
+  if (ratingMatch) {
+    const rating = parseFloat(ratingMatch[1]);
+    return rating >= imdbMin;
+  }
+  return true;
+});
+data.content[0].text = filtered.join("\n");
     }
 
     res.status(response.status).json(data);
