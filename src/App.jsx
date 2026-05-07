@@ -188,8 +188,7 @@ export default function RamolaRecommends() {
 
   const imdbColor = imdb >= 8 ? "#A3E635" : imdb >= 7 ? "#FACC15" : "#71717A";
   const imdbBg = imdb >= 8 ? "rgba(163,230,53,0.1)" : imdb >= 7 ? "rgba(250,204,21,0.1)" : "rgba(113,113,122,0.1)";
-  const reccoLabel = `Get Reccos${genre !== "Any Genre" ? "  ·  " + genre : ""}${platform !== "Any Platform" ? "  ·  " + platform : ""}${contentType !== "Any" ? "  ·  " + contentType : ""}${!languages.includes("Any") ? "  ·  " + languages.join("+") : ""}`;
-
+const reccoLabel = `Get Reccos${genre !== "Any Genre" ? "  ·  " + genre : ""}${platform !== "Any Platform" ? "  ·  " + platform : ""}${contentType !== "Any" ? "  ·  " + contentType : ""}${!languages.includes("Any") ? "  ·  " + languages.join("+") : ""}`;
   return (
     <div style={{
       fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif",
