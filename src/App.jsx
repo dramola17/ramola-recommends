@@ -66,6 +66,7 @@ const WELCOME_MESSAGE = {
 const GENRES = ["Any Genre", "Thriller / Mystery", "True Story / Biopic", "Sci-Fi", "Drama", "Dark / Gritty", "Action", "Comedy", "Feel-Good", "Horror", "Romance", "Crime", "Documentary", "Animation"];
 const PLATFORMS = ["Any Platform", "Netflix", "Prime Video", "JioHotstar", "ZEE5", "MUBI", "Apple TV+", "YouTube"];
 const CONTENT_TYPES = ["Any", "Movies Only", "Shows Only"];
+const Industry = ["Bollywood", "Hollywood", "South Indian", "European", "Korean", "Any"];
 
 function formatMessage(text) {
   let f = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
@@ -82,6 +83,7 @@ export default function RamolaRecommends() {
   const [genre, setGenre] = useState("Any Genre");
   const [platform, setPlatform] = useState("Any Platform");
   const [contentType, setContentType] = useState("Any");
+const [languages, setLanguages] = useState(["Any"]);
   const [imdb, setImdb] = useState(6.5);
   const [creditsOver, setCreditsOver] = useState(false);
   const bottomRef = useRef(null);
@@ -112,6 +114,12 @@ export default function RamolaRecommends() {
     parts.push(`Platform: Any (include platform name after each recommendation)`);
   }
   if (contentType !== "Any") parts.push(`Content type: ${contentType}`);
+  const selectedLangs = languages.filter(l => l !== "Any");
+  if (selectedLangs.length > 0 && !languages.includes("Any")) {
+    parts.push(`Languages: ${selectedLangs.join(", ")} only`);
+  } else {
+    parts.push(`Languages: Mix of Bollywood and Hollywood and other international`);
+  }
   parts.push(`IMDb minimum: ${imdb} (strictly — do not include anything below this rating, sort results in decreasing IMDb order)`);
   return raw + ` [Filters: ${parts.join(", ")}]`;
 }
@@ -164,11 +172,27 @@ export default function RamolaRecommends() {
   }
 
   function handleQuickRecco() {
-    const g = genre !== "Any Genre" ? genre : "";
-    const p = platform !== "Any Platform" ? `on ${platform}` : "";
-    const c = contentType !== "Any" ? `, ${contentType}` : "";
-    sendMessage(`Give me reccos${g ? ": " + g : ""}${p ? " " + p : ""}${c}`);
+  const g = genre !== "Any Genre" ? genre : "";
+  const p = platform !== "Any Platform" ? `on ${platform}` : "";
+  const c = contentType !== "Any" ? `, ${contentType}` : "";
+  const l = !languages.includes("Any") ? `, ${languages.join(" + ")}` : "";
+  sendMessage(`Give me reccos${g ? ": " + g : ""}${p ? " " + p : ""}${c}${l}`);
+}
+
+   function toggleLanguage(lang) {
+  if (lang === "Any") {
+    setLanguages(["Any"]);
+    return;
   }
+  setLanguages(prev => {
+    const without = prev.filter(l => l !== "Any");
+    if (without.includes(lang)) {
+      const updated = without.filter(l => l !== lang);
+      return updated.length === 0 ? ["Any"] : updated;
+    }
+    return [...without, lang];
+  });
+}
 
   const imdbColor = imdb >= 8 ? "#A3E635" : imdb >= 7 ? "#FACC15" : "#71717A";
   const imdbBg = imdb >= 8 ? "rgba(163,230,53,0.1)" : imdb >= 7 ? "rgba(250,204,21,0.1)" : "rgba(113,113,122,0.1)";
@@ -274,6 +298,33 @@ export default function RamolaRecommends() {
             </div>
           </div>
 
+
+
+           {/* Language selector */}
+<div style={{ marginBottom: "12px" }}>
+  <label style={{ fontSize: "10px", fontWeight: "600", color: "#52525B", textTransform: "uppercase", letterSpacing: "0.07em", display: "block", marginBottom: "8px" }}>Language</label>
+  <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+    {LANGUAGES.map(lang => {
+      const isSelected = languages.includes(lang);
+      return (
+        <button key={lang} onClick={() => toggleLanguage(lang)} style={{
+          padding: "5px 12px",
+          borderRadius: "20px",
+          border: "1px solid",
+          borderColor: isSelected ? "rgba(163,230,53,0.5)" : "rgba(255,255,255,0.07)",
+          background: isSelected ? "rgba(163,230,53,0.12)" : "transparent",
+          color: isSelected ? "#A3E635" : "#52525B",
+          fontSize: "12px", fontWeight: isSelected ? "600" : "400",
+          cursor: "pointer", fontFamily: "inherit",
+          transition: "all 0.2s"
+        }}>
+          {lang}
+        </button>
+      );
+    })}
+  </div>
+</div>
+           
           {/* IMDb slider */}
           <div style={{ marginBottom: "12px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
