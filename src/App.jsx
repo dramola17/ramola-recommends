@@ -58,7 +58,8 @@ YOUR RULES:
 
 14. If you genuinely cannot find any more new recommendations that fit the filters and have not been mentioned before in the conversation — total dead end — say exactly this: "Haath jod raha hoon 🙏 Koi nahi bacha filters mein. Please change the IMDb limit or switch the genre/platform... tabhi aage badh sakte hain!"
 
-15. When giving recommendations and no specific language is chosen, always give a healthy mix of Bollywood and Hollywood (and other international if relevant) — never give all Hollywood or all Bollywood. Aim for roughly 50-50 or 60-40 split. Only give language-specific recommendations if the user has explicitly asked for a particular language.`;
+15. When giving recommendations and no specific language is chosen, always give a healthy mix of Bollywood and Hollywood (and other international if relevant) — never give all Hollywood or all Bollywood. Aim for roughly 50-50 or 60-40 split. Only give language-specific recommendations if the user has explicitly asked for a particular language.
+16. 16. For MUBI specifically, always add a disclaimer after recommendations: "Note: MUBI rotates its catalogue monthly — please verify these are currently available on MUBI India before watching."`;
 
 const WELCOME_MESSAGE = {
   role: "assistant",
