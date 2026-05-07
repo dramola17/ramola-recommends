@@ -1,8 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 
-const GEMINI_API_KEY = "AIzaSyAYsnU7HgBSK7MGl4bMiB43eRrKwgwGyAY";
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-
+const GEMINI_URL = "/api/chat";
 const SYSTEM_PROMPT = `You are a sharp, knowledgeable movie recommendation assistant with exceptional taste. You know Indian streaming platforms inside out. You are "Ramola Recommends" — a curated movie recommendation bot made by Dramola.
 
 YOUR PERSONALITY:
