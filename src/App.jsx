@@ -33,8 +33,7 @@ YOUR RULES:
    Format with platform: **1. Movie/Show Name (Year)** | X.X IMDb | Platform Name
    Format without platform: **1. Movie/Show Name (Year)** | X.X IMDb
 
-5. STRICTLY follow the IMDb minimum filter. Only recommend content AT OR ABOVE the selected IMDb rating. Do not fudge or round up ratings to meet the quota of 10.
-
+5. STRICTLY follow the IMDb minimum filter. Only recommend content AT OR ABOVE the selected IMDb rating. Do not fudge or round up ratings to meet the quota of 10. Never include a title and then say it "dips under" the threshold — if it is below the threshold, do not mention it at all.
 6. If there are fewer than 10 results that genuinely meet the IMDb filter and other filters:
    - Give only the ones that qualify — do not pad with lower-rated content
    - Tell the user exactly how many you found
@@ -75,7 +74,7 @@ function formatMessage(text) {
   f = f.split("\n").map(line =>
     line.trim() === "" ? "<br/>" : `<span style="display:block;margin-bottom:3px">${line}</span>`
   ).join("");
-  return f;
+  return f;   
 }
 
 export default function RamolaRecommends() {
