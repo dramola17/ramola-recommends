@@ -69,8 +69,7 @@ const WELCOME_MESSAGE = {
 const GENRES = ["Any Genre", "Thriller / Mystery", "True Story / Biopic", "Sci-Fi", "Drama", "Dark / Gritty", "Action", "Comedy", "Feel-Good", "Horror", "Romance", "Crime", "Documentary", "Animation"];
 const PLATFORMS = ["Any Platform", "Netflix", "Prime Video", "JioHotstar", "ZEE5", "MUBI", "Apple TV+", "YouTube"];
 const CONTENT_TYPES = ["Any", "Movies Only", "Shows Only"];
-const LANGUAGES = ["Any", "Bollywood", "Hollywood", "South Indian", "European", "Korean"];
-
+const INDUSTRY = ["Any", "Bollywood", "Hollywood", "South Indian", "European", "Korean"];
 function formatMessage(text) {
   let f = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
   f = f.split("\n").map(line =>
