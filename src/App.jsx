@@ -275,7 +275,8 @@ export default function RamolaRecommends() {
         width: "100%", maxWidth: "660px",
         flex: 1, padding: "16px 20px 0",
         display: "flex", flexDirection: "column", gap: "12px",
-        position: "relative", zIndex: 1
+        position: "relative", zIndex: 1,
+        marginTop: "16px"
       }}>
         {messages.map((msg, i) => {
           const isBot = msg.role === "model" || msg.role === "assistant";
