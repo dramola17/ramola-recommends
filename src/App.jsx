@@ -47,7 +47,7 @@ YOUR RULES:
 
 const WELCOME_MESSAGE = {
   role: "model",
-  content: "Hey! Welcome to Ramola Recommends. Curated picks, zero fluff, always with where to watch in India.\n\nTwo quick things:\n\n1. **Languages you're open to?** (Hindi, English, South Indian, International or all?)\n2. **Anything you absolutely don't want?** (horror, sappy romance, slow arthouse, no subtitles, etc.)\n\nOr just set your filters and hit Get Reccos!"
+  content: "Hey! Welcome to Ramola Recommends. Curated picks, zero fluff, always with where to watch in India.\n\nTwo quick things:\n\n1. **Languages you're open to?** (Hindi, English, South Indian, International or all?)\n2. **Anything you absolutely don't want?** (horror, sappy romance, slow arthouse, no subtitles, etc.)\n\nSet your filters up top or just type below what you feel like watching!"
 };
 
 const GENRES = ["Any Genre", "Thriller / Mystery", "True Story / Biopic", "Sci-Fi", "Drama", "Dark / Gritty", "Action", "Comedy", "Feel-Good", "Horror", "Romance", "Crime", "Documentary", "Animation"];
@@ -121,7 +121,8 @@ export default function RamolaRecommends() {
       const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Something went wrong. Try again!";
       setMessages(prev => [...prev, { role: "model", content: reply }]);
     } catch {
-      setMessages(prev => [...prev, { role: "model", content: "Something went wrong. Try again!" }]);
+      setCreditsOver(true);
+      setMessages(prev => [...prev, { role: "model", content: "Credits over. Call God Dramola for more!" }]);
     } finally {
       setLoading(false);
     }
