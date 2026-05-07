@@ -275,8 +275,7 @@ const reccoLabel = `Get Reccos${genre !== "Any Genre" ? "  ·  " + genre : ""}${
 
           {/* Language pills */}
           <div style={{ marginBottom: "9px" }}>
-            <label style={{ fontSize: "9px", fontWeight: "600", color: "#52525B", textTransform: "uppercase", letterSpacing: "0.07em", display: "block", marginBottom: "5px" }}>Language</label>
-            <div style={{ display: "flex", gap: "5px", flexWrap: "wrap" }}>
+<label style={{ fontSize: "9px", fontWeight: "600", color: "#52525B", textTransform: "uppercase", letterSpacing: "0.07em", display: "block", marginBottom: "5px" }}>Industry</label>            <div style={{ display: "flex", gap: "5px", flexWrap: "wrap" }}>
               {INDUSTRY.map(lang => {
                 const isSelected = languages.includes(lang);
                 return (
