@@ -27,31 +27,39 @@ YOUR RULES:
 
 3. When the user sends a message like "Give me [Genre] on [Platform] with IMDb above [X]" treat that as a complete request and give 10 results immediately.
 
-4. Format ALL recommendations EXACTLY like this, numbered list, each on a new line. Use a vertical bar | instead of em dash:
-**1. Movie/Show Name (Year)** | X.X IMDb | Platform Name
-**2. Movie/Show Name (Year)** | X.X IMDb | Platform Name
+4. Format recommendations based on platform filter:
+   - If platform is "Any Platform": include platform name after each entry
+   - If a specific platform is selected (e.g. Netflix): DO NOT repeat the platform name after every entry since user already knows
+   Format: **1. Movie/Show Name (Year)** | X.X IMDb | Platform (only if Any Platform)
+   Format: **1. Movie/Show Name (Year)** | X.X IMDb (if specific platform selected)
 
 5. Always give exactly 10 recommendations unless user asks for fewer.
 
-6. ALWAYS mention where to watch in India. Platforms: Netflix, Prime Video, JioHotstar, SonyLIV, MUBI, Apple TV+, ZEE5, YouTube.
+6. Respect the content type filter:
+   - If "Movies Only": recommend only movies/films, no series or shows
+   - If "Shows Only": recommend only TV series/web series/shows, no movies
+   - If "Any": recommend mix of both
 
-7. Only recommend content at or above the IMDb rating the user selected. Default is 6.5.
+7. ALWAYS mention where to watch in India when platform is Any. Platforms: Netflix, Prime Video, JioHotstar, SonyLIV, MUBI, Apple TV+, ZEE5, YouTube.
 
-8. After giving recommendations, ask "Which of these have you seen? I'll swap those out!" and then replace watched ones with fresh picks, always keeping exactly 10.
+8. Only recommend content at or above the IMDb rating the user selected. Default is 6.5.
 
-9. For true crime documentaries, warn that Netflix heavily favours series. Prioritise single films unless user says episodes are fine.
+9. After giving recommendations, ask "Which of these have you seen? I'll swap those out!" and then replace watched ones with fresh picks, always keeping exactly 10.
 
-10. Be honest if a category has limited options on a specific platform. Do not pad with bad picks.
+10. For true crime documentaries, warn that Netflix heavily favours series. Prioritise single films unless user says episodes are fine.
 
-11. Vibe and tone: like a well-watched friend giving honest recs, not a formal assistant. Never use em dashes anywhere.`;
+11. Be honest if a category has limited options on a specific platform. Do not pad with bad picks.
+
+12. Vibe and tone: like a well-watched friend giving honest recs, not a formal assistant. Never use em dashes anywhere.`;
 
 const WELCOME_MESSAGE = {
-  role: "model",
+  role: "assistant",
   content: "Hey! Welcome to Ramola Recommends. Curated picks, zero fluff, always with where to watch in India.\n\nTwo quick things:\n\n1. **Languages you're open to?** (Hindi, English, South Indian, International or all?)\n2. **Anything you absolutely don't want?** (horror, sappy romance, slow arthouse, no subtitles, etc.)\n\nSet your filters up top or just type below what you feel like watching!"
 };
 
 const GENRES = ["Any Genre", "Thriller / Mystery", "True Story / Biopic", "Sci-Fi", "Drama", "Dark / Gritty", "Action", "Comedy", "Feel-Good", "Horror", "Romance", "Crime", "Documentary", "Animation"];
 const PLATFORMS = ["Any Platform", "Netflix", "Prime Video", "JioHotstar", "ZEE5", "MUBI", "Apple TV+", "YouTube"];
+const CONTENT_TYPES = ["Any", "Movies Only", "Shows Only"];
 
 function formatMessage(text) {
   let f = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
@@ -67,19 +75,29 @@ export default function RamolaRecommends() {
   const [loading, setLoading] = useState(false);
   const [genre, setGenre] = useState("Any Genre");
   const [platform, setPlatform] = useState("Any Platform");
+  const [contentType, setContentType] = useState("Any");
   const [imdb, setImdb] = useState(6.5);
   const [creditsOver, setCreditsOver] = useState(false);
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
+  const headerRef = useRef(null);
+  const [headerHeight, setHeaderHeight] = useState(0);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
 
+  useEffect(() => {
+    if (headerRef.current) {
+      setHeaderHeight(headerRef.current.offsetHeight);
+    }
+  }, []);
+
   function buildUserText(raw) {
     const parts = [];
     if (genre !== "Any Genre") parts.push(`Genre: ${genre}`);
-    if (platform !== "Any Platform") parts.push(`Platform: ${platform}`);
+    if (platform !== "Any Platform") parts.push(`Platform: ${platform} (do not repeat platform name after each recommendation)`);
+    if (contentType !== "Any") parts.push(`Content type: ${contentType}`);
     parts.push(`IMDb minimum: ${imdb}`);
     return raw + ` [Filters: ${parts.join(", ")}]`;
   }
@@ -88,45 +106,40 @@ export default function RamolaRecommends() {
     const rawText = typeof overrideText === "string" ? overrideText : input.trim();
     if (!rawText || loading || creditsOver) return;
 
-    setMessages(prev => [...prev, { role: "user", content: rawText }]);
+    const newUserMsg = { role: "user", content: rawText };
+    setMessages(prev => [...prev, newUserMsg]);
     setInput("");
     setLoading(true);
 
-    const geminiHistory = [
-      ...messages.map(m => ({
-        role: m.role === "assistant" || m.role === "model" ? "model" : "user",
-        parts: [{ text: m.content }]
-      })),
-      { role: "user", parts: [{ text: buildUserText(rawText) }] }
-    ];
+    const historyForApi = messages
+      .filter(m => m.role === "user" || m.role === "assistant")
+      .concat([{ role: "user", content: buildUserText(rawText) }])
+      .map(m => ({ role: m.role, content: m.content }));
 
     try {
       const res = await fetch(API_URL, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    model: "claude-haiku-4-5-20251001",
-    max_tokens: 1200,
-    system: SYSTEM_PROMPT,
-    messages: messages
-      .filter(m => m.role === "user" || m.role === "assistant")
-      .concat([{ role: "user", content: buildUserText(rawText) }])
-      .map(m => ({ role: m.role, content: m.content }))
-  })
-});
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-haiku-4-5-20251001",
+          max_tokens: 1200,
+          system: SYSTEM_PROMPT,
+          messages: historyForApi
+        })
+      });
 
       if (res.status === 429 || res.status === 403) {
         setCreditsOver(true);
-        setMessages(prev => [...prev, { role: "model", content: "Credits over. Call God Dramola for more!" }]);
+        setMessages(prev => [...prev, { role: "assistant", content: "Credits over. Call God Dramola for more!" }]);
         return;
       }
 
       const data = await res.json();
       const reply = data?.content?.[0]?.text || "Something went wrong. Try again!";
-      setMessages(prev => [...prev, { role: "model", content: reply }]);
+      setMessages(prev => [...prev, { role: "assistant", content: reply }]);
     } catch {
       setCreditsOver(true);
-      setMessages(prev => [...prev, { role: "model", content: "Credits over. Call God Dramola for more!" }]);
+      setMessages(prev => [...prev, { role: "assistant", content: "Credits over. Call God Dramola for more!" }]);
     } finally {
       setLoading(false);
     }
@@ -139,21 +152,25 @@ export default function RamolaRecommends() {
   function handleQuickRecco() {
     const g = genre !== "Any Genre" ? genre : "";
     const p = platform !== "Any Platform" ? `on ${platform}` : "";
-    sendMessage(`Give me reccos${g ? ": " + g : ""}${p ? " " + p : ""}`);
+    const c = contentType !== "Any" ? `, ${contentType}` : "";
+    sendMessage(`Give me reccos${g ? ": " + g : ""}${p ? " " + p : ""}${c}`);
   }
 
   const imdbColor = imdb >= 8 ? "#A3E635" : imdb >= 7 ? "#FACC15" : "#71717A";
   const imdbBg = imdb >= 8 ? "rgba(163,230,53,0.1)" : imdb >= 7 ? "rgba(250,204,21,0.1)" : "rgba(113,113,122,0.1)";
 
+  const reccoLabel = `Get Reccos${genre !== "Any Genre" ? "  ·  " + genre : ""}${platform !== "Any Platform" ? "  ·  " + platform : ""}${contentType !== "Any" ? "  ·  " + contentType : ""}`;
+
   return (
     <div style={{
       fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif",
       background: "#09090B",
-      minHeight: "100vh",
+      height: "100vh",
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
-      color: "#FAFAFA"
+      color: "#FAFAFA",
+      overflow: "hidden"
     }}>
       <div style={{
         position: "fixed", top: 0, left: "50%", transform: "translateX(-50%)",
@@ -163,17 +180,17 @@ export default function RamolaRecommends() {
       }} />
 
       {/* Header */}
-      <div style={{
+      <div ref={headerRef} style={{
         width: "100%", maxWidth: "660px",
-        padding: "44px 20px 0",
-        position: "sticky", top: 0,
+        padding: "32px 20px 0",
+        flexShrink: 0,
         background: "rgba(9,9,11,0.9)",
         backdropFilter: "blur(24px)",
         WebkitBackdropFilter: "blur(24px)",
         zIndex: 10,
         borderBottom: "1px solid rgba(255,255,255,0.05)"
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
           <div style={{
             width: "40px", height: "40px",
             background: "#A3E635",
@@ -192,11 +209,12 @@ export default function RamolaRecommends() {
         <div style={{
           background: "#18181B",
           borderRadius: "16px",
-          padding: "16px",
+          padding: "14px",
           marginBottom: "12px",
           border: "1px solid rgba(255,255,255,0.06)"
         }}>
-          <div style={{ display: "flex", gap: "10px", marginBottom: "14px" }}>
+          {/* Row 1: Genre + Platform */}
+          <div style={{ display: "flex", gap: "8px", marginBottom: "10px" }}>
             {[
               { label: "Genre", value: genre, setter: setGenre, options: GENRES },
               { label: "Platform", value: platform, setter: setPlatform, options: PLATFORMS }
@@ -204,40 +222,53 @@ export default function RamolaRecommends() {
               <div key={label} style={{ flex: 1 }}>
                 <label style={{ fontSize: "10px", fontWeight: "600", color: "#52525B", textTransform: "uppercase", letterSpacing: "0.07em", display: "block", marginBottom: "5px" }}>{label}</label>
                 <div style={{ position: "relative" }}>
-                  <select
-                    value={value}
-                    onChange={e => setter(e.target.value)}
-                    style={{
-                      width: "100%", padding: "9px 26px 9px 11px",
-                      borderRadius: "10px",
-                      border: "1px solid",
-                      borderColor: value !== options[0] ? "rgba(163,230,53,0.35)" : "rgba(255,255,255,0.07)",
-                      background: value !== options[0] ? "rgba(163,230,53,0.07)" : "#09090B",
-                      color: value !== options[0] ? "#A3E635" : "#71717A",
-                      fontSize: "13px", fontWeight: "500",
-                      outline: "none", cursor: "pointer",
-                      appearance: "none", fontFamily: "inherit",
-                      transition: "all 0.2s"
-                    }}
-                  >
+                  <select value={value} onChange={e => setter(e.target.value)} style={{
+                    width: "100%", padding: "8px 24px 8px 10px",
+                    borderRadius: "10px", border: "1px solid",
+                    borderColor: value !== options[0] ? "rgba(163,230,53,0.35)" : "rgba(255,255,255,0.07)",
+                    background: value !== options[0] ? "rgba(163,230,53,0.07)" : "#09090B",
+                    color: value !== options[0] ? "#A3E635" : "#71717A",
+                    fontSize: "13px", fontWeight: "500",
+                    outline: "none", cursor: "pointer",
+                    appearance: "none", fontFamily: "inherit", transition: "all 0.2s"
+                  }}>
                     {options.map(o => <option key={o} value={o}>{o}</option>)}
                   </select>
-                  <span style={{ position: "absolute", right: "9px", top: "50%", transform: "translateY(-50%)", color: "#3F3F46", fontSize: "10px", pointerEvents: "none" }}>▾</span>
+                  <span style={{ position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", color: "#3F3F46", fontSize: "10px", pointerEvents: "none" }}>▾</span>
                 </div>
               </div>
             ))}
+
+            {/* Content Type */}
+            <div style={{ minWidth: "100px" }}>
+              <label style={{ fontSize: "10px", fontWeight: "600", color: "#52525B", textTransform: "uppercase", letterSpacing: "0.07em", display: "block", marginBottom: "5px" }}>Type</label>
+              <div style={{ position: "relative" }}>
+                <select value={contentType} onChange={e => setContentType(e.target.value)} style={{
+                  width: "100%", padding: "8px 24px 8px 10px",
+                  borderRadius: "10px", border: "1px solid",
+                  borderColor: contentType !== "Any" ? "rgba(163,230,53,0.35)" : "rgba(255,255,255,0.07)",
+                  background: contentType !== "Any" ? "rgba(163,230,53,0.07)" : "#09090B",
+                  color: contentType !== "Any" ? "#A3E635" : "#71717A",
+                  fontSize: "13px", fontWeight: "500",
+                  outline: "none", cursor: "pointer",
+                  appearance: "none", fontFamily: "inherit", transition: "all 0.2s"
+                }}>
+                  {CONTENT_TYPES.map(o => <option key={o} value={o}>{o}</option>)}
+                </select>
+                <span style={{ position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", color: "#3F3F46", fontSize: "10px", pointerEvents: "none" }}>▾</span>
+              </div>
+            </div>
           </div>
 
           {/* IMDb slider */}
-          <div style={{ marginBottom: "14px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+          <div style={{ marginBottom: "12px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
               <label style={{ fontSize: "10px", fontWeight: "600", color: "#52525B", textTransform: "uppercase", letterSpacing: "0.07em" }}>IMDb Minimum</label>
               <span style={{ fontSize: "12px", fontWeight: "700", color: imdbColor, background: imdbBg, padding: "2px 8px", borderRadius: "6px", transition: "all 0.3s" }}>
                 {imdb.toFixed(1)} ★
               </span>
             </div>
-            <input
-              type="range" min="0" max="10" step="0.1" value={imdb}
+            <input type="range" min="0" max="10" step="0.1" value={imdb}
               onChange={e => setImdb(parseFloat(e.target.value))}
               style={{
                 width: "100%", height: "3px", appearance: "none",
@@ -245,41 +276,38 @@ export default function RamolaRecommends() {
                 borderRadius: "2px", outline: "none", cursor: "pointer", transition: "background 0.2s"
               }}
             />
-            <div style={{ display: "flex", justifyContent: "space-between", marginTop: "5px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", marginTop: "4px" }}>
               {[0, 2, 4, 6, 8, 10].map(n => <span key={n} style={{ fontSize: "9px", color: "#3F3F46" }}>{n}</span>)}
             </div>
           </div>
 
-          <button
-            onClick={handleQuickRecco}
-            disabled={loading || creditsOver}
-            style={{
-              width: "100%", padding: "11px",
-              borderRadius: "11px", border: "none",
-              background: creditsOver ? "#27272A" : loading ? "rgba(163,230,53,0.25)" : "#A3E635",
-              color: creditsOver ? "#3F3F46" : loading ? "#A3E635" : "#09090B",
-              fontSize: "13px", fontWeight: "700",
-              cursor: loading || creditsOver ? "not-allowed" : "pointer",
-              fontFamily: "inherit",
-              boxShadow: !loading && !creditsOver ? "0 0 20px rgba(163,230,53,0.15)" : "none",
-              transition: "all 0.2s"
-            }}
-          >
-            {loading ? "Finding picks..." : creditsOver ? "Credits over. Call God Dramola." : `Get Reccos${genre !== "Any Genre" ? "  ·  " + genre : ""}${platform !== "Any Platform" ? "  ·  " + platform : ""}`}
+          <button onClick={handleQuickRecco} disabled={loading || creditsOver} style={{
+            width: "100%", padding: "10px",
+            borderRadius: "11px", border: "none",
+            background: creditsOver ? "#27272A" : loading ? "rgba(163,230,53,0.25)" : "#A3E635",
+            color: creditsOver ? "#3F3F46" : loading ? "#A3E635" : "#09090B",
+            fontSize: "13px", fontWeight: "700",
+            cursor: loading || creditsOver ? "not-allowed" : "pointer",
+            fontFamily: "inherit",
+            boxShadow: !loading && !creditsOver ? "0 0 20px rgba(163,230,53,0.15)" : "none",
+            transition: "all 0.2s"
+          }}>
+            {loading ? "Finding picks..." : creditsOver ? "Credits over. Call God Dramola." : reccoLabel}
           </button>
         </div>
       </div>
 
-      {/* Messages */}
+      {/* Messages — scrollable */}
       <div style={{
         width: "100%", maxWidth: "660px",
-        flex: 1, padding: "16px 20px 0",
+        flex: 1,
+        overflowY: "auto",
+        padding: "16px 20px",
         display: "flex", flexDirection: "column", gap: "12px",
-        position: "relative", zIndex: 1,
-        marginTop: "16px"
+        position: "relative", zIndex: 1
       }}>
         {messages.map((msg, i) => {
-          const isBot = msg.role === "model" || msg.role === "assistant";
+          const isBot = msg.role === "assistant";
           return (
             <div key={i} style={{
               display: "flex",
@@ -333,31 +361,27 @@ export default function RamolaRecommends() {
           </div>
         )}
 
-        <div ref={bottomRef} style={{ height: "130px" }} />
+        <div ref={bottomRef} style={{ height: "8px" }} />
       </div>
 
       {/* Input */}
       <div style={{
         width: "100%", maxWidth: "660px",
-        padding: "10px 20px 32px",
-        position: "sticky", bottom: 0,
-        background: "linear-gradient(to bottom, transparent, #09090B 35%)"
+        padding: "10px 20px 28px",
+        flexShrink: 0,
+        background: "linear-gradient(to bottom, transparent, #09090B 30%)"
       }}>
         <div style={{ display: "flex", gap: "8px", alignItems: "flex-end" }}>
-          <textarea
-            ref={inputRef}
-            value={input}
+          <textarea ref={inputRef} value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={creditsOver ? "Credits over. Call God Dramola." : "Or just type what you are in the mood for..."}
-            disabled={creditsOver}
-            rows={1}
+            disabled={creditsOver} rows={1}
             style={{
               flex: 1, padding: "12px 16px",
               borderRadius: "14px",
               border: "1px solid rgba(255,255,255,0.07)",
-              background: "#18181B",
-              color: "#FAFAFA",
+              background: "#18181B", color: "#FAFAFA",
               fontSize: "14px", fontFamily: "inherit",
               resize: "none", outline: "none",
               lineHeight: "1.5", transition: "border-color 0.2s"
@@ -365,22 +389,18 @@ export default function RamolaRecommends() {
             onFocus={e => e.target.style.borderColor = "rgba(163,230,53,0.35)"}
             onBlur={e => e.target.style.borderColor = "rgba(255,255,255,0.07)"}
           />
-          <button
-            onClick={() => sendMessage()}
-            disabled={loading || !input.trim() || creditsOver}
-            style={{
-              width: "46px", height: "46px",
-              borderRadius: "14px", border: "none",
-              background: loading || !input.trim() || creditsOver ? "#27272A" : "#A3E635",
-              color: loading || !input.trim() || creditsOver ? "#3F3F46" : "#09090B",
-              fontSize: "18px", fontWeight: "700",
-              cursor: loading || !input.trim() || creditsOver ? "not-allowed" : "pointer",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              flexShrink: 0,
-              boxShadow: !loading && input.trim() && !creditsOver ? "0 0 16px rgba(163,230,53,0.2)" : "none",
-              transition: "all 0.2s"
-            }}
-          >↑</button>
+          <button onClick={() => sendMessage()} disabled={loading || !input.trim() || creditsOver} style={{
+            width: "46px", height: "46px",
+            borderRadius: "14px", border: "none",
+            background: loading || !input.trim() || creditsOver ? "#27272A" : "#A3E635",
+            color: loading || !input.trim() || creditsOver ? "#3F3F46" : "#09090B",
+            fontSize: "18px", fontWeight: "700",
+            cursor: loading || !input.trim() || creditsOver ? "not-allowed" : "pointer",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            flexShrink: 0,
+            boxShadow: !loading && input.trim() && !creditsOver ? "0 0 16px rgba(163,230,53,0.2)" : "none",
+            transition: "all 0.2s"
+          }}>↑</button>
         </div>
       </div>
 
