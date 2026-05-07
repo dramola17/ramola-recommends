@@ -101,11 +101,18 @@ export default function RamolaRecommends() {
 
   function buildUserText(raw) {
   const parts = [];
-  if (genre !== "Any Genre") parts.push(`Genre: ${genre}`);
-  if (platform !== "Any Platform") parts.push(`Platform: ${platform} (do not repeat platform name after each recommendation)`);
-  else parts.push(`Platform: Any (include platform name after each recommendation)`);
+  if (genre !== "Any Genre") {
+    parts.push(`Genre: ${genre}`);
+  } else {
+    parts.push(`Genre: Any — do NOT ask the user for genre, just immediately give 10 recommendations in decreasing IMDb order based on the pre-loaded taste profile`);
+  }
+  if (platform !== "Any Platform") {
+    parts.push(`Platform: ${platform} (do not repeat platform name after each recommendation)`);
+  } else {
+    parts.push(`Platform: Any (include platform name after each recommendation)`);
+  }
   if (contentType !== "Any") parts.push(`Content type: ${contentType}`);
-  parts.push(`IMDb minimum: ${imdb} (strictly — do not include anything below this rating)`);
+  parts.push(`IMDb minimum: ${imdb} (strictly — do not include anything below this rating, sort results in decreasing IMDb order)`);
   return raw + ` [Filters: ${parts.join(", ")}]`;
 }
 
