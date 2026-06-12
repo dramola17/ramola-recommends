@@ -10,9 +10,10 @@ YOUR PERSONALITY:
 - Never use em dashes in your responses. Use a colon or a simple space instead.
 
 PRE-LOADED TASTE PROFILE (apply this as a baseline for all users):
-- Loved movies and shows: Gangs of Wasseypur, Andhadhun, Dune, The Dark Knight, Inception, Tumbbad, Parasite, Article 15, Zindagi Na Milegi Dobara, American Psycho, DevD (Abhay Deol), Aankhon Dekhi,Black White and Grey, Manorama Six Feet Under, Ed Gein (Netflix), Ted Lasso (Apple TV+), Shrinking (Apple TV+), Shogun (JioHotstar), Presumed Innocent, M. Night Shyamalan films (The Sixth Sense, Unbreakable, Split, Signs), Jim Carrey films (The Truman Show, Eternal Sunshine, The Mask, Liar Liar), Christian Bale films (American Psycho, The Dark Knight, The Fighter, Ford v Ferrari)- Loves: gripping story, strong characters, visual experience, emotional depth, dark and gritty, humour, morally complex characters, unconventional narratives
-- Benchmark films: Zodiac (stays with you), The Man from Earth (mind-blowing), Argo (biopic/true story done right), Interstellar, Aankhon Dekhi, Kohrra, tabbar, TVF Pitchers, Sopranos, The Wire, Better Call Saul
-- Also loves: biopics, true story films, thought-provoking sci-fi like Project Hail Mary, - Loves: gripping story, strong characters, visual experience, emotional depth, dark and gritty, humour, morally complex characters, unconventional narratives, psychological thrillers, feel-good workplace comedies, prestige TV dramas, slow burn mysteries
+- Loved movies and shows: Gangs of Wasseypur, Andhadhun, Dune, The Dark Knight, Inception, Tumbbad, Parasite, Article 15, Zindagi Na Milegi Dobara, American Psycho, DevD (Abhay Deol), Aankhon Dekhi, Manorama Six Feet Under, Ed Gein (Netflix), Ted Lasso (Apple TV+), Shrinking (Apple TV+), Shogun (JioHotstar), Presumed Innocent, M. Night Shyamalan films, Jim Carrey films, Christian Bale films
+- Loves: gripping story, strong characters, visual experience, emotional depth, dark and gritty, humour, morally complex characters, unconventional narratives, psychological thrillers, feel-good workplace comedies, prestige TV dramas, slow burn mysteries
+- Benchmark films: Zodiac (stays with you), The Man from Earth (mind-blowing), Argo (biopic/true story done right)
+- Also loves: biopics, true story films, thought-provoking sci-fi like Project Hail Mary
 - Does NOT want: heavy/depressing content, slow-burn arthouse
 
 YOUR RULES:
@@ -20,7 +21,8 @@ YOUR RULES:
    - What languages they are open to? (Hindi, English, South Indian, International)
    - Anything they absolutely do not want? (horror, heavy drama, slow arthouse, no subtitles, etc.)
    Then immediately ask: "What do you feel like watching today?"
-DO NOT ask about favourite movies or what they love. That is already baked in. You also handle requests by actor, director, city, or filming location — these are all valid recco triggers.
+   DO NOT ask about favourite movies or what they love. That is already baked in.
+
 2. When the user asks for reccos without specifying a genre (or genre is "Any Genre"), IMMEDIATELY give 10 recommendations without asking any questions. Pick across genres based on the pre-loaded taste profile — thrillers, dark dramas, biopics, unconventional narratives, character-driven films. Sort them in decreasing IMDb order. Never ask the user to clarify genre when "Any Genre" is selected.
 
 3. When the user sends a message like "Give me [Genre] on [Platform] with IMDb above [X]" treat that as a complete request and give results immediately.
@@ -32,6 +34,7 @@ DO NOT ask about favourite movies or what they love. That is already baked in. Y
    Format without platform: **1. Movie/Show Name (Year)** | X.X IMDb
 
 5. STRICTLY follow the IMDb minimum filter. Only recommend content AT OR ABOVE the selected IMDb rating. Do not fudge or round up ratings to meet the quota of 10. Never include a title and then say it "dips under" the threshold — if it is below the threshold, do not mention it at all.
+
 6. If there are fewer than 10 results that genuinely meet the IMDb filter and other filters:
    - Give only the ones that qualify — do not pad with lower-rated content
    - Tell the user exactly how many you found
@@ -42,9 +45,9 @@ DO NOT ask about favourite movies or what they love. That is already baked in. Y
 8. Respect the content type filter strictly:
    - "Movies Only": only films, no series
    - "Shows Only": only TV/web series, no films
-   - "Any": mix of both
+   - "Any": mix of both. When "Any" is selected, prefix each entry with [Movie] or [Show]
 
-9. ALWAYS mention where to watch in India when platform is Any Platform. Platforms: Netflix, Prime Video, JioHotstar, SonyLIV, MUBI, Apple TV+, ZEE5, YouTube.
+9. ALWAYS mention where to watch in India when platform is Any Platform. Platforms: Netflix, Prime Video, JioHotstar, SonyLIV, MUBI, Apple TV+, ZEE5.
 
 10. After giving recommendations, ask "Which of these have you seen? I'll swap those out!" and replace watched ones with fresh picks at the same IMDb threshold.
 
@@ -57,15 +60,18 @@ DO NOT ask about favourite movies or what they love. That is already baked in. Y
 14. If you genuinely cannot find any more new recommendations that fit the filters and have not been mentioned before in the conversation — total dead end — say exactly this: "Haath jod raha hoon 🙏 Koi nahi bacha filters mein. Please change the IMDb limit or switch the genre/platform... tabhi aage badh sakte hain!"
 
 15. When giving recommendations and no specific language is chosen, always give a healthy mix of Bollywood and Hollywood (and other international if relevant) — never give all Hollywood or all Bollywood. Aim for roughly 50-50 or 60-40 split. Only give language-specific recommendations if the user has explicitly asked for a particular language.
-16. For MUBI specifically — their catalogue rotates monthly and Claude's knowledge may be outdated. Always add this note after MUBI recommendations: "Heads up: MUBI rotates films monthly. Double check these are still showing on MUBI India before watching."
-17. When content type filter is "Any", prefix each recommendation with the content type in brackets before the number. Use [Movie] or [Show] accordingly:
-[Movie] **1. Movie Name (Year)** | X.X IMDb | Platform
-[Show] **2. Show Name (Year)** | X.X IMDb | Platform
-When "Movies Only" or "Shows Only" is selected, do NOT add the prefix since it is already implied by the filter. 
-18. ONLY recommend content that is confirmed available to stream in India. Never recommend something that is not accessible on Indian streaming platforms. If unsure about Indian availability, skip it and pick something you are confident about. Always think: "Can someone in India watch this right now?"
-19. Before finalising any recommendation, think like a Reddit cinephile on r/india, r/bollywood, r/indiancinema, or r/flicks would — would they rate this pick highly? Would they call it genuinely worth watching or just a filler pick? Only include recommendations that would get upvotes on those subreddits, not ones that would get called out as lazy suggestions.
-20. If the user asks anything completely unrelated to movies, shows, or entertainment — like coding questions, life advice, general knowledge, or random topics — respond with exactly this and nothing else: "Tokens tera baap chod kar gaya tha ya teri maa?"
-21. If the user asks for recommendations by a specific actor, director, city, or location (e.g. "movies with Nawazuddin", "Nolan films", "movies set in Mumbai", "films shot in Paris") — treat it as a valid recco request. Search your knowledge for content matching that criteria, apply all active filters (platform, IMDb, content type, industry), and only recommend titles you are confident are available in India. Format the same way as regular reccos. If fewer than 10 qualify with confidence, give only those and say how many you found.`;
+
+16. For MUBI specifically, always add a disclaimer after recommendations: "Note: MUBI rotates its catalogue monthly — please verify these are currently available on MUBI India before watching."
+
+17. ONLY recommend content that is confirmed available to stream in India. Never recommend something that is not accessible on Indian streaming platforms. If unsure about Indian availability, skip it and pick something you are confident about. Always think: "Can someone in India watch this right now?"
+
+18. If the user asks for recommendations by a specific actor, director, city, or location — treat it as a valid recco request. Search your knowledge for content matching that criteria, apply all active filters, and only recommend titles you are confident are available in India.
+
+19. Before finalising any recommendation, think like a Reddit cinephile on r/india, r/bollywood, or r/flicks would — would they rate this pick highly? Only include recommendations that would get upvotes, not ones that would get called out as lazy suggestions.
+
+20. If the user asks anything completely unrelated to movies, shows, or entertainment — like coding questions, life advice, or random topics — respond with exactly this and nothing else: "Tokens tera baap chod kar gaya tha ya teri maa? 🙏"
+
+21. If the user asks for recommendations by a specific actor, director, city, or location, treat it as a valid recco request and give results immediately.`;
 
 const WELCOME_MESSAGE = {
   role: "assistant",
@@ -76,12 +82,13 @@ const GENRES = ["Any Genre", "Thriller / Mystery", "True Story / Biopic", "Sci-F
 const PLATFORMS = ["Any Platform", "Netflix", "Prime Video", "JioHotstar", "ZEE5", "MUBI", "Apple TV+", "SonyLIV"];
 const CONTENT_TYPES = ["Any", "Movies Only", "Shows Only"];
 const INDUSTRY = ["Any", "Bollywood", "Hollywood", "South Indian", "European", "Korean"];
+
 function formatMessage(text) {
   let f = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
   f = f.split("\n").map(line =>
-    line.trim() === "" ? "<br/>" : `<span style="display:block;margin-bottom:3px">${line}</span>`
+    line.trim() === "" ? "<br/>" : `<span style="display:block;margin-bottom:4px">${line}</span>`
   ).join("");
-  return f;   
+  return f;
 }
 
 export default function RamolaRecommends() {
@@ -102,10 +109,7 @@ export default function RamolaRecommends() {
   }, [messages, loading]);
 
   function toggleLanguage(lang) {
-    if (lang === "Any") {
-      setLanguages(["Any"]);
-      return;
-    }
+    if (lang === "Any") { setLanguages(["Any"]); return; }
     setLanguages(prev => {
       const without = prev.filter(l => l !== "Any");
       if (without.includes(lang)) {
@@ -129,6 +133,7 @@ export default function RamolaRecommends() {
       parts.push(`Platform: Any (include platform name after each recommendation)`);
     }
     if (contentType !== "Any") parts.push(`Content type: ${contentType}`);
+    else parts.push(`Content type: Any (prefix each rec with [Movie] or [Show])`);
     const selectedLangs = languages.filter(l => l !== "Any");
     if (selectedLangs.length > 0) {
       parts.push(`Languages: ${selectedLangs.join(", ")} only`);
@@ -142,16 +147,13 @@ export default function RamolaRecommends() {
   async function sendMessage(overrideText) {
     const rawText = typeof overrideText === "string" ? overrideText : input.trim();
     if (!rawText || loading || creditsOver) return;
-
     setMessages(prev => [...prev, { role: "user", content: rawText }]);
     setInput("");
     setLoading(true);
-
     const historyForApi = messages
       .filter(m => m.role === "user" || m.role === "assistant")
       .concat([{ role: "user", content: buildUserText(rawText) }])
       .map(m => ({ role: m.role, content: m.content }));
-
     try {
       const res = await fetch(API_URL, {
         method: "POST",
@@ -163,16 +165,14 @@ export default function RamolaRecommends() {
           messages: historyForApi
         })
       });
-
       if (res.status === 429 || res.status === 403) {
         setCreditsOver(true);
         setMessages(prev => [...prev, { role: "assistant", content: "Credits over. Call God Dramola for more!" }]);
         return;
       }
-
       const data = await res.json();
       const textBlock = data?.content?.find(b => b.type === "text");
-      const reply = textBlock?.text || "Something went wrong. Try again!";
+      const reply = textBlock?.text || data?.content?.[0]?.text || "Something went wrong. Try again!";
       setMessages(prev => [...prev, { role: "assistant", content: reply }]);
     } catch {
       setCreditsOver(true);
@@ -194,254 +194,268 @@ export default function RamolaRecommends() {
     sendMessage(`Give me reccos${g ? ": " + g : ""}${p ? " " + p : ""}${c}${l}`);
   }
 
-  const imdbColor = imdb >= 8 ? "#A3E635" : imdb >= 7 ? "#FACC15" : "#71717A";
-  const imdbBg = imdb >= 8 ? "rgba(163,230,53,0.1)" : imdb >= 7 ? "rgba(250,204,21,0.1)" : "rgba(113,113,122,0.1)";
-const reccoLabel = `Get Reccos${genre !== "Any Genre" ? "  ·  " + genre : ""}${platform !== "Any Platform" ? "  ·  " + platform : ""}${contentType !== "Any" ? "  ·  " + contentType : ""}${!languages.includes("Any") ? "  ·  " + languages.join("+") : ""}`;
+  const reccoLabel = `▶  Roll the Reccos${genre !== "Any Genre" ? "  ·  " + genre : ""}${platform !== "Any Platform" ? "  ·  " + platform : ""}${contentType !== "Any" ? "  ·  " + contentType : ""}${!languages.includes("Any") ? "  ·  " + languages.join("+") : ""}`;
+
+  const FilmStrip = () => (
+    <div style={{ width: "100%", background: "#111", padding: "10px 0", overflow: "hidden" }}>
+      <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
+        {Array(20).fill(0).map((_, i) => (
+          <div key={i} style={{ width: "9px", height: "7px", background: "#F4F2ED", borderRadius: "1px", flexShrink: 0 }} />
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <div style={{
-      fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif",
-      background: "#09090B", height: "100vh",
-      display: "flex", flexDirection: "column",
-      alignItems: "center", color: "#FAFAFA", overflow: "hidden"
+      fontFamily: "Georgia,'Times New Roman',serif",
+      background: "#F4F2ED",
+      height: "100vh",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      color: "#1A1A18",
+      overflow: "hidden"
     }}>
-      <div style={{
-        position: "fixed", top: 0, left: "50%", transform: "translateX(-50%)",
-        width: "500px", height: "200px",
-        background: "radial-gradient(ellipse, rgba(163,230,53,0.05) 0%, transparent 70%)",
-        pointerEvents: "none", zIndex: 0
-      }} />
 
-      {/* Header */}
-      <div style={{
-        width: "100%", maxWidth: "660px", padding: "24px 20px 0",
-        flexShrink: 0, background: "rgba(9,9,11,0.9)",
-        backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)",
-        zIndex: 10, borderBottom: "1px solid rgba(255,255,255,0.05)"
-      }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "12px" }}>
-          <div style={{
-            width: "36px", height: "36px", background: "#A3E635",
-            borderRadius: "10px", display: "flex", alignItems: "center",
-            justifyContent: "center", fontSize: "17px",
-            boxShadow: "0 0 20px rgba(163,230,53,0.2)"
-          }}>🎞️</div>
-          <div>
-            <div style={{ fontSize: "17px", fontWeight: "700", letterSpacing: "-0.4px" }}>Ramola Recommends</div>
-            <div style={{ fontSize: "11px", color: "#52525B", marginTop: "1px" }}>Curated picks · India streaming</div>
-          </div>
-        </div>
-
+      {/* Header — poster style */}
+      <div style={{ width: "100%", flexShrink: 0 }}>
+        <FilmStrip />
         <div style={{
-          background: "#18181B", borderRadius: "14px",
-          padding: "12px", marginBottom: "10px",
-          border: "1px solid rgba(255,255,255,0.06)"
+          width: "100%",
+          background: "#1A1A18",
+          padding: "28px 20px 24px",
+          textAlign: "center",
+          borderBottom: "4px solid #8B0000"
         }}>
-          {/* Row 1: Genre + Platform + Type */}
-          <div style={{ display: "flex", gap: "7px", marginBottom: "9px" }}>
-            {[
-              { label: "Genre", value: genre, setter: setGenre, options: GENRES },
-              { label: "Platform", value: platform, setter: setPlatform, options: PLATFORMS }
-            ].map(({ label, value, setter, options }) => (
-              <div key={label} style={{ flex: 1 }}>
-                <label style={{ fontSize: "9px", fontWeight: "600", color: "#52525B", textTransform: "uppercase", letterSpacing: "0.07em", display: "block", marginBottom: "4px" }}>{label}</label>
-                <div style={{ position: "relative" }}>
+          <div style={{ fontSize: "10px", letterSpacing: "0.5em", color: "#C9A961", fontFamily: "'Courier New',monospace", marginBottom: "10px" }}>★ ★ ★ ★ ★</div>
+          <div style={{ fontSize: "10px", letterSpacing: "0.4em", color: "#F4F2ED", textTransform: "uppercase", fontFamily: "'Courier New',monospace", marginBottom: "8px", opacity: 0.6 }}>Dramola Pictures Presents</div>
+          <div style={{ fontSize: "36px", fontWeight: "bold", color: "#F4F2ED", textTransform: "uppercase", fontFamily: "Georgia,serif", textShadow: "3px 3px 0 #8B0000", lineHeight: 1.05 }}>
+            Ramola<br />Recommends
+          </div>
+          <div style={{ margin: "12px auto 0", width: "180px", height: "1px", background: "linear-gradient(to right, transparent, #C9A961, transparent)" }} />
+          <div style={{ fontSize: "9px", color: "#666", marginTop: "10px", fontFamily: "'Courier New',monospace", letterSpacing: "0.25em" }}>NOW SHOWING · CURATED PICKS · INDIA STREAMING</div>
+        </div>
+      </div>
+
+      {/* Scrollable body */}
+      <div style={{ width: "100%", flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", alignItems: "center" }}>
+
+        {/* Filter panel */}
+        <div style={{ width: "100%", maxWidth: "640px", padding: "20px 20px 0" }}>
+          <div style={{
+            background: "#FFFDF8",
+            border: "1.5px solid #1A1A18",
+            padding: "16px",
+            boxShadow: "5px 5px 0 #1A1A18"
+          }}>
+            <div style={{ textAlign: "center", fontSize: "9px", letterSpacing: "0.3em", color: "#8B0000", fontFamily: "'Courier New',monospace", fontWeight: "bold", marginBottom: "12px", textTransform: "uppercase" }}>— Select Your Screening —</div>
+
+            {/* Genre + Platform + Type */}
+            <div style={{ display: "flex", gap: "8px", marginBottom: "12px" }}>
+              {[
+                { label: "Genre", value: genre, setter: setGenre, options: GENRES },
+                { label: "Platform", value: platform, setter: setPlatform, options: PLATFORMS }
+              ].map(({ label, value, setter, options }) => (
+                <div key={label} style={{ flex: 1 }}>
+                  <div style={{ fontSize: "8px", letterSpacing: "0.15em", color: "#999", textTransform: "uppercase", fontFamily: "'Courier New',monospace", marginBottom: "4px" }}>{label}</div>
                   <select value={value} onChange={e => setter(e.target.value)} style={{
-                    width: "100%", padding: "6px 20px 6px 9px",
-                    borderRadius: "9px", border: "1px solid",
-                    borderColor: value !== options[0] ? "rgba(163,230,53,0.35)" : "rgba(255,255,255,0.07)",
-                    background: value !== options[0] ? "rgba(163,230,53,0.07)" : "#09090B",
-                    color: value !== options[0] ? "#A3E635" : "#71717A",
-                    fontSize: "12px", fontWeight: "500",
-                    outline: "none", cursor: "pointer",
-                    appearance: "none", fontFamily: "inherit", transition: "all 0.2s"
+                    width: "100%", padding: "7px 10px",
+                    border: `1px solid ${value !== options[0] ? "#8B0000" : "#CCC9C0"}`,
+                    background: value !== options[0] ? "#FFF8F8" : "#FFFDF8",
+                    color: value !== options[0] ? "#8B0000" : "#888",
+                    fontSize: "12px", fontFamily: "Georgia,serif",
+                    fontStyle: value !== options[0] ? "italic" : "normal",
+                    outline: "none", cursor: "pointer"
                   }}>
                     {options.map(o => <option key={o} value={o}>{o}</option>)}
                   </select>
-                  <span style={{ position: "absolute", right: "7px", top: "50%", transform: "translateY(-50%)", color: "#3F3F46", fontSize: "9px", pointerEvents: "none" }}>▾</span>
                 </div>
-              </div>
-            ))}
-            <div style={{ minWidth: "85px" }}>
-              <label style={{ fontSize: "9px", fontWeight: "600", color: "#52525B", textTransform: "uppercase", letterSpacing: "0.07em", display: "block", marginBottom: "4px" }}>Type</label>
-              <div style={{ position: "relative" }}>
+              ))}
+              <div style={{ minWidth: "85px" }}>
+                <div style={{ fontSize: "8px", letterSpacing: "0.15em", color: "#999", textTransform: "uppercase", fontFamily: "'Courier New',monospace", marginBottom: "4px" }}>Type</div>
                 <select value={contentType} onChange={e => setContentType(e.target.value)} style={{
-                  width: "100%", padding: "6px 20px 6px 9px",
-                  borderRadius: "9px", border: "1px solid",
-                  borderColor: contentType !== "Any" ? "rgba(163,230,53,0.35)" : "rgba(255,255,255,0.07)",
-                  background: contentType !== "Any" ? "rgba(163,230,53,0.07)" : "#09090B",
-                  color: contentType !== "Any" ? "#A3E635" : "#71717A",
-                  fontSize: "12px", fontWeight: "500",
-                  outline: "none", cursor: "pointer",
-                  appearance: "none", fontFamily: "inherit", transition: "all 0.2s"
+                  width: "100%", padding: "7px 10px",
+                  border: `1px solid ${contentType !== "Any" ? "#8B0000" : "#CCC9C0"}`,
+                  background: contentType !== "Any" ? "#FFF8F8" : "#FFFDF8",
+                  color: contentType !== "Any" ? "#8B0000" : "#888",
+                  fontSize: "12px", fontFamily: "Georgia,serif",
+                  outline: "none", cursor: "pointer"
                 }}>
                   {CONTENT_TYPES.map(o => <option key={o} value={o}>{o}</option>)}
                 </select>
-                <span style={{ position: "absolute", right: "7px", top: "50%", transform: "translateY(-50%)", color: "#3F3F46", fontSize: "9px", pointerEvents: "none" }}>▾</span>
               </div>
             </div>
-          </div>
 
-          {/* Language pills */}
-          <div style={{ marginBottom: "9px" }}>
-<label style={{ fontSize: "9px", fontWeight: "600", color: "#52525B", textTransform: "uppercase", letterSpacing: "0.07em", display: "block", marginBottom: "5px" }}>Industry</label>            <div style={{ display: "flex", gap: "5px", flexWrap: "wrap" }}>
-              {INDUSTRY.map(lang => {
-                const isSelected = languages.includes(lang);
-                return (
-                  <button key={lang} onClick={() => toggleLanguage(lang)} style={{
-                    padding: "3px 10px", borderRadius: "20px", border: "1px solid",
-                    borderColor: isSelected ? "rgba(163,230,53,0.5)" : "rgba(255,255,255,0.07)",
-                    background: isSelected ? "rgba(163,230,53,0.12)" : "transparent",
-                    color: isSelected ? "#A3E635" : "#52525B",
-                    fontSize: "11px", fontWeight: isSelected ? "600" : "400",
-                    cursor: "pointer", fontFamily: "inherit", transition: "all 0.2s"
-                  }}>{lang}</button>
-                );
-              })}
+            {/* Industry pills */}
+            <div style={{ marginBottom: "12px" }}>
+              <div style={{ fontSize: "8px", letterSpacing: "0.15em", color: "#999", textTransform: "uppercase", fontFamily: "'Courier New',monospace", marginBottom: "6px" }}>Industry</div>
+              <div style={{ display: "flex", gap: "5px", flexWrap: "wrap" }}>
+                {INDUSTRY.map(lang => {
+                  const isSelected = languages.includes(lang);
+                  return (
+                    <button key={lang} onClick={() => toggleLanguage(lang)} style={{
+                      padding: "3px 12px",
+                      border: `1px solid ${isSelected ? "#1A1A18" : "#CCC9C0"}`,
+                      background: isSelected ? "#1A1A18" : "transparent",
+                      color: isSelected ? "#FFFDF8" : "#999",
+                      fontSize: "10px", fontFamily: "'Courier New',monospace",
+                      letterSpacing: "0.08em", cursor: "pointer",
+                      transition: "all 0.15s"
+                    }}>{lang.toUpperCase()}</button>
+                  );
+                })}
+              </div>
             </div>
-          </div>
 
-          {/* IMDb slider */}
-          <div style={{ marginBottom: "9px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "5px" }}>
-              <label style={{ fontSize: "9px", fontWeight: "600", color: "#52525B", textTransform: "uppercase", letterSpacing: "0.07em" }}>IMDb Minimum</label>
-              <span style={{ fontSize: "11px", fontWeight: "700", color: imdbColor, background: imdbBg, padding: "2px 7px", borderRadius: "6px", transition: "all 0.3s" }}>
-                {imdb.toFixed(1)} ★
-              </span>
+            {/* IMDb slider */}
+            <div style={{ marginBottom: "14px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
+                <div style={{ fontSize: "8px", letterSpacing: "0.15em", color: "#999", textTransform: "uppercase", fontFamily: "'Courier New',monospace" }}>IMDb Minimum</div>
+                <span style={{ fontSize: "13px", fontWeight: "bold", color: "#8B0000", fontFamily: "'Courier New',monospace" }}>★ {imdb.toFixed(1)}</span>
+              </div>
+              <input type="range" min="0" max="10" step="0.1" value={imdb}
+                onChange={e => setImdb(parseFloat(e.target.value))}
+                style={{
+                  width: "100%", height: "3px", appearance: "none",
+                  background: `linear-gradient(to right, #8B0000 0%, #8B0000 ${imdb * 10}%, #E0DDD4 ${imdb * 10}%, #E0DDD4 100%)`,
+                  outline: "none", cursor: "pointer"
+                }}
+              />
+              <div style={{ display: "flex", justifyContent: "space-between", marginTop: "3px" }}>
+                {[0, 2, 4, 6, 8, 10].map(n => <span key={n} style={{ fontSize: "8px", color: "#BBB", fontFamily: "'Courier New',monospace" }}>{n}</span>)}
+              </div>
             </div>
-            <input type="range" min="0" max="10" step="0.1" value={imdb}
-              onChange={e => setImdb(parseFloat(e.target.value))}
-              style={{
-                width: "100%", height: "3px", appearance: "none",
-                background: `linear-gradient(to right, ${imdbColor} 0%, ${imdbColor} ${imdb * 10}%, #27272A ${imdb * 10}%, #27272A 100%)`,
-                borderRadius: "2px", outline: "none", cursor: "pointer", transition: "background 0.2s"
-              }}
-            />
-            <div style={{ display: "flex", justifyContent: "space-between", marginTop: "3px" }}>
-              {[0, 2, 4, 6, 8, 10].map(n => <span key={n} style={{ fontSize: "8px", color: "#3F3F46" }}>{n}</span>)}
-            </div>
-          </div>
 
-          <button onClick={handleQuickRecco} disabled={loading || creditsOver} style={{
-            width: "100%", padding: "9px", borderRadius: "10px", border: "none",
-            background: creditsOver ? "#27272A" : loading ? "rgba(163,230,53,0.25)" : "#A3E635",
-            color: creditsOver ? "#3F3F46" : loading ? "#A3E635" : "#09090B",
-            fontSize: "12px", fontWeight: "700",
-            cursor: loading || creditsOver ? "not-allowed" : "pointer",
-            fontFamily: "inherit",
-            boxShadow: !loading && !creditsOver ? "0 0 20px rgba(163,230,53,0.15)" : "none",
-            transition: "all 0.2s",
-            whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"
-          }}>
-            {loading ? "Finding picks..." : creditsOver ? "Credits over. Call God Dramola." : reccoLabel}
-          </button>
-        </div>
-      </div>
-
-      {/* Messages */}
-      <div style={{
-        width: "100%", maxWidth: "660px", flex: 1, overflowY: "auto",
-        padding: "14px 20px", display: "flex", flexDirection: "column", gap: "12px",
-        position: "relative", zIndex: 1
-      }}>
-        {messages.map((msg, i) => {
-          const isBot = msg.role === "assistant";
-          return (
-            <div key={i} style={{
-              display: "flex",
-              justifyContent: isBot ? "flex-start" : "flex-end",
-              alignItems: "flex-end", gap: "8px", animation: "fadeIn 0.2s ease"
+            <button onClick={handleQuickRecco} disabled={loading || creditsOver} style={{
+              width: "100%", padding: "12px",
+              border: "none",
+              background: creditsOver ? "#888" : loading ? "#C0564A" : "#8B0000",
+              color: "#FFFDF8",
+              fontSize: "11px", fontFamily: "'Courier New',monospace",
+              fontWeight: "bold", letterSpacing: "0.2em",
+              cursor: loading || creditsOver ? "not-allowed" : "pointer",
+              textTransform: "uppercase",
+              whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"
             }}>
-              {isBot && (
-                <div style={{
-                  width: "28px", height: "28px", background: "#A3E635",
-                  borderRadius: "8px", display: "flex", alignItems: "center",
-                  justifyContent: "center", fontSize: "13px", flexShrink: 0
-                }}>🎞️</div>
-              )}
-              <div style={{
-                maxWidth: "82%",
-                padding: isBot ? "12px 16px" : "10px 14px",
-                borderRadius: isBot ? "4px 16px 16px 16px" : "16px 16px 4px 16px",
-                background: isBot ? "#18181B" : "#A3E635",
-                color: isBot ? "#D4D4D8" : "#09090B",
-                fontSize: "14px", lineHeight: "1.65",
-                border: isBot ? "1px solid rgba(255,255,255,0.05)" : "none",
-                boxShadow: isBot ? "none" : "0 2px 12px rgba(163,230,53,0.15)",
-                fontWeight: isBot ? "400" : "600"
+              {loading ? "LOADING THE REEL..." : creditsOver ? "CREDITS OVER. CALL GOD DRAMOLA." : reccoLabel}
+            </button>
+          </div>
+        </div>
+
+        {/* Messages */}
+        <div style={{ width: "100%", maxWidth: "640px", padding: "18px 20px", display: "flex", flexDirection: "column", gap: "14px" }}>
+          {messages.map((msg, i) => {
+            const isBot = msg.role === "assistant";
+            return (
+              <div key={i} style={{
+                display: "flex",
+                justifyContent: isBot ? "flex-start" : "flex-end",
+                alignItems: "flex-end", gap: "10px",
+                animation: "fadeIn 0.2s ease"
               }}>
-                {isBot
-                  ? <div dangerouslySetInnerHTML={{ __html: formatMessage(msg.content) }} />
-                  : msg.content
-                }
+                {isBot && (
+                  <div style={{
+                    width: "32px", height: "32px", background: "#8B0000",
+                    borderRadius: "50%", display: "flex", alignItems: "center",
+                    justifyContent: "center", fontSize: "14px", flexShrink: 0,
+                    border: "2px solid #1A1A18"
+                  }}>🎬</div>
+                )}
+                <div style={{
+                  maxWidth: "82%",
+                  padding: isBot ? "13px 17px" : "10px 15px",
+                  background: isBot ? "#FFFDF8" : "#1A1A18",
+                  color: isBot ? "#1A1A18" : "#FFFDF8",
+                  fontSize: "14px", lineHeight: "1.7",
+                  fontFamily: "Georgia,serif",
+                  border: isBot ? "1px solid #1A1A18" : "none",
+                  boxShadow: isBot ? "3px 3px 0 rgba(26,26,24,0.12)" : "none",
+                  borderRadius: isBot ? "2px 12px 12px 12px" : "12px 12px 2px 12px"
+                }}>
+                  {isBot
+                    ? <div dangerouslySetInnerHTML={{ __html: formatMessage(msg.content) }} />
+                    : msg.content
+                  }
+                </div>
+              </div>
+            );
+          })}
+
+          {loading && (
+            <div style={{ display: "flex", alignItems: "flex-end", gap: "10px" }}>
+              <div style={{ width: "32px", height: "32px", background: "#8B0000", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "14px", border: "2px solid #1A1A18" }}>🎬</div>
+              <div style={{ padding: "13px 17px", background: "#FFFDF8", border: "1px solid #1A1A18", boxShadow: "3px 3px 0 rgba(26,26,24,0.12)", display: "flex", gap: "5px", alignItems: "center" }}>
+                {[0, 1, 2].map(i => (
+                  <div key={i} style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#8B0000", animation: `bounce 1.2s ease-in-out ${i * 0.2}s infinite` }} />
+                ))}
               </div>
             </div>
-          );
-        })}
+          )}
 
-        {loading && (
-          <div style={{ display: "flex", alignItems: "flex-end", gap: "8px" }}>
-            <div style={{ width: "28px", height: "28px", background: "#A3E635", borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "13px" }}>🎞️</div>
-            <div style={{ padding: "12px 16px", borderRadius: "4px 16px 16px 16px", background: "#18181B", border: "1px solid rgba(255,255,255,0.05)", display: "flex", gap: "4px", alignItems: "center" }}>
-              {[0, 1, 2].map(i => (
-                <div key={i} style={{ width: "5px", height: "5px", borderRadius: "50%", background: "#A3E635", animation: `bounce 1.2s ease-in-out ${i * 0.2}s infinite` }} />
-              ))}
+          {creditsOver && (
+            <div style={{ textAlign: "center", padding: "24px", background: "#FFFDF8", border: "1.5px solid #1A1A18", boxShadow: "4px 4px 0 #1A1A18" }}>
+              <div style={{ fontSize: "28px", marginBottom: "8px" }}>🙏</div>
+              <div style={{ fontSize: "14px", fontWeight: "bold", color: "#8B0000", fontFamily: "'Courier New',monospace", letterSpacing: "0.1em" }}>CREDITS OVER</div>
+              <div style={{ fontSize: "12px", color: "#888", marginTop: "4px", fontFamily: "'Courier New',monospace" }}>Call God Dramola for more</div>
             </div>
-          </div>
-        )}
+          )}
 
-        {creditsOver && (
-          <div style={{ textAlign: "center", padding: "24px", background: "#18181B", borderRadius: "16px", border: "1px solid rgba(163,230,53,0.12)" }}>
-            <div style={{ fontSize: "30px", marginBottom: "10px" }}>🙏</div>
-            <div style={{ fontSize: "15px", fontWeight: "700", color: "#A3E635" }}>Credits Over</div>
-            <div style={{ fontSize: "13px", color: "#52525B", marginTop: "5px" }}>Call God Dramola for more</div>
-          </div>
-        )}
-        <div ref={bottomRef} style={{ height: "8px" }} />
-      </div>
+          <div ref={bottomRef} style={{ height: "8px" }} />
+        </div>
 
-      {/* Input */}
-      <div style={{
-        width: "100%", maxWidth: "660px", padding: "8px 20px 24px", flexShrink: 0,
-        background: "linear-gradient(to bottom, transparent, #09090B 30%)"
-      }}>
-        <div style={{ display: "flex", gap: "8px", alignItems: "flex-end" }}>
-          <textarea ref={inputRef} value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder={creditsOver ? "Credits over. Call God Dramola." : "Or just type what you are in the mood for..."}
-            disabled={creditsOver} rows={1}
-            style={{
-              flex: 1, padding: "12px 16px", borderRadius: "14px",
-              border: "1px solid rgba(255,255,255,0.07)",
-              background: "#18181B", color: "#FAFAFA",
-              fontSize: "14px", fontFamily: "inherit",
-              resize: "none", outline: "none",
-              lineHeight: "1.5", transition: "border-color 0.2s"
-            }}
-            onFocus={e => e.target.style.borderColor = "rgba(163,230,53,0.35)"}
-            onBlur={e => e.target.style.borderColor = "rgba(255,255,255,0.07)"}
-          />
-          <button onClick={() => sendMessage()} disabled={loading || !input.trim() || creditsOver} style={{
-            width: "46px", height: "46px", borderRadius: "14px", border: "none",
-            background: loading || !input.trim() || creditsOver ? "#27272A" : "#A3E635",
-            color: loading || !input.trim() || creditsOver ? "#3F3F46" : "#09090B",
-            fontSize: "18px", fontWeight: "700",
-            cursor: loading || !input.trim() || creditsOver ? "not-allowed" : "pointer",
-            display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
-            boxShadow: !loading && input.trim() && !creditsOver ? "0 0 16px rgba(163,230,53,0.2)" : "none",
-            transition: "all 0.2s"
-          }}>↑</button>
+        {/* Input */}
+        <div style={{ width: "100%", maxWidth: "640px", padding: "0 20px 16px" }}>
+          <div style={{ display: "flex", gap: "8px" }}>
+            <textarea ref={inputRef} value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder={creditsOver ? "Credits over. Call God Dramola." : "Or just type what you are in the mood for..."}
+              disabled={creditsOver} rows={1}
+              style={{
+                flex: 1, padding: "12px 14px",
+                border: "1.5px solid #1A1A18",
+                background: "#FFFDF8", color: "#1A1A18",
+                fontSize: "14px", fontFamily: "Georgia,serif",
+                fontStyle: "italic", resize: "none", outline: "none",
+                lineHeight: "1.5", transition: "border-color 0.2s"
+              }}
+              onFocus={e => e.target.style.borderColor = "#8B0000"}
+              onBlur={e => e.target.style.borderColor = "#1A1A18"}
+            />
+            <button onClick={() => sendMessage()} disabled={loading || !input.trim() || creditsOver} style={{
+              width: "48px", height: "46px",
+              border: "none",
+              background: loading || !input.trim() || creditsOver ? "#CCC9C0" : "#8B0000",
+              color: "#FFFDF8", fontSize: "18px",
+              cursor: loading || !input.trim() || creditsOver ? "not-allowed" : "pointer",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              flexShrink: 0, transition: "all 0.2s"
+            }}>→</button>
+          </div>
+        </div>
+
+        {/* Bottom film strip + credits */}
+        <div style={{ width: "100%", background: "#111", padding: "10px 0 8px", marginTop: "auto" }}>
+          <div style={{ display: "flex", justifyContent: "center", gap: "10px", marginBottom: "8px" }}>
+            {Array(20).fill(0).map((_, i) => (
+              <div key={i} style={{ width: "9px", height: "7px", background: "#F4F2ED", borderRadius: "1px", flexShrink: 0 }} />
+            ))}
+          </div>
+          <div style={{ textAlign: "center", fontSize: "9px", color: "#555", fontFamily: "'Courier New',monospace", letterSpacing: "0.3em" }}>
+            A DRAMOLA PRODUCTION · EST. 2026
+          </div>
         </div>
       </div>
 
       <style>{`
         @keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
         @keyframes bounce { 0%,60%,100% { transform:translateY(0); } 30% { transform:translateY(-6px); } }
-        input[type=range]::-webkit-slider-thumb { appearance:none; width:14px; height:14px; border-radius:50%; background:#A3E635; cursor:pointer; box-shadow:0 0 8px rgba(163,230,53,0.3); }
-        input[type=range]::-moz-range-thumb { width:14px; height:14px; border-radius:50%; background:#A3E635; cursor:pointer; border:none; }
-        select option { background:#18181B; color:#E4E4E7; }
+        input[type=range]::-webkit-slider-thumb { appearance:none; width:14px; height:14px; border-radius:50%; background:#8B0000; cursor:pointer; border:2px solid #FFFDF8; box-shadow:0 0 0 1px #8B0000; }
+        input[type=range]::-moz-range-thumb { width:14px; height:14px; border-radius:50%; background:#8B0000; cursor:pointer; border:2px solid #FFFDF8; }
+        select option { background:#FFFDF8; color:#1A1A18; }
         ::-webkit-scrollbar { width:3px; }
-        ::-webkit-scrollbar-thumb { background:#27272A; border-radius:2px; }
+        ::-webkit-scrollbar-thumb { background:#CCC9C0; border-radius:2px; }
         textarea { overflow:hidden; }
         * { box-sizing:border-box; }
       `}</style>
