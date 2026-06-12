@@ -6,6 +6,16 @@ export default async function handler(req, res) {
   if (req.method === "OPTIONS") return res.status(200).end();
 
   try {
+    const bodyWithTools = {
+      ...req.body,
+      tools: [
+        {
+          type: "web_search_20250305",
+          name: "web_search"
+        }
+      ]
+    };
+
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
@@ -13,27 +23,28 @@ export default async function handler(req, res) {
         "x-api-key": process.env.CLAUDE_API_KEY,
         "anthropic-version": "2023-06-01"
       },
-      body: JSON.stringify(req.body)
+      body: JSON.stringify(bodyWithTools)
     });
 
     const data = await response.json();
 
-    // IMDb checkpoint — extract minimum from request filters
     const bodyText = JSON.stringify(req.body);
     const imdbMatch = bodyText.match(/IMDb minimum: (\d+(\.\d+)?)/);
     const imdbMin = imdbMatch ? parseFloat(imdbMatch[1]) : 0;
 
-    if (imdbMin > 0 && data?.content?.[0]?.text) {
-      const lines = data.content[0].text.split("\n");
-const filtered = lines.filter(line => {
-  const ratingMatch = line.match(/(\d+\.\d+)\s*IMDb/i);
-  if (ratingMatch) {
-    const rating = parseFloat(ratingMatch[1]);
-    return rating >= imdbMin;
-  }
-  return true;
-});
-data.content[0].text = filtered.join("\n");
+    if (imdbMin > 0 && data?.content) {
+      const textBlock = data.content.find(b => b.type === "text");
+      if (textBlock) {
+        const lines = textBlock.text.split("\n");
+        const filtered = lines.filter(line => {
+          const ratingMatch = line.match(/(\d+\.\d+)\s*IMDb/i);
+          if (ratingMatch) {
+            return parseFloat(ratingMatch[1]) >= imdbMin;
+          }
+          return true;
+        });
+        textBlock.text = filtered.join("\n");
+      }
     }
 
     res.status(response.status).json(data);
