@@ -171,7 +171,8 @@ export default function RamolaRecommends() {
       }
 
       const data = await res.json();
-      const reply = data?.content?.[0]?.text || "Something went wrong. Try again!";
+      const textBlock = data?.content?.find(b => b.type === "text");
+      const reply = textBlock?.text || "Something went wrong. Try again!";
       setMessages(prev => [...prev, { role: "assistant", content: reply }]);
     } catch {
       setCreditsOver(true);
