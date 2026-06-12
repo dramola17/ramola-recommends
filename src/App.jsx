@@ -218,7 +218,11 @@ export default function RamolaRecommends() {
       overflow: "hidden"
     }}>
 
-      {/* Header — poster style */}
+     
+
+      {/* Scrollable body */}
+      <div style={{ width: "100%", flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", alignItems: "center" }}>
+       {/* Header — poster style */}
       <div style={{ width: "100%", flexShrink: 0, order: -1 }}>
         <FilmStrip />
         <div style={{
@@ -237,10 +241,6 @@ export default function RamolaRecommends() {
           <div style={{ fontSize: "9px", color: "#666", marginTop: "10px", fontFamily: "'Courier New',monospace", letterSpacing: "0.25em" }}>NOW SHOWING · CURATED PICKS · INDIA STREAMING</div>
         </div>
       </div>
-
-      {/* Scrollable body */}
-      <div style={{ width: "100%", flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", alignItems: "center" }}>
-
         {/* Filter panel */}
         <div style={{ width: "100%", maxWidth: "640px", padding: "20px 20px 0" }}>
           <div style={{
