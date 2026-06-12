@@ -219,7 +219,7 @@ export default function RamolaRecommends() {
     }}>
 
       {/* Header — poster style */}
-      <div style={{ width: "100%", flexShrink: 0 }}>
+      <div style={{ width: "100%", flexShrink: 0, order: -1 }}>
         <FilmStrip />
         <div style={{
           width: "100%",
