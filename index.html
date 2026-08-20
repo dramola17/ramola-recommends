@@ -1,12 +1,713 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ramola Recommends</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yaadein — recreate a memory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#2B2A33;
+    --ink-soft:#43404E;
+    --ink-muted:#726E80;
+    --bg-cream:#F4EEE3;
+    --bg-lav:#E9E2F1;
+    --bg-peach:#F3DFC9;
+    --panel:rgba(255,255,255,0.58);
+    --panel-solid:#FBF8F2;
+    --panel-line:rgba(43,42,51,0.10);
+    --amber:#C9752E;
+    --amber-soft:#E0A868;
+    --amber-bg:rgba(201,117,46,0.10);
+    --rose:#C97B84;
+    --warn-bg:rgba(255,255,255,0.65);
+    --warn-line:rgba(201,117,46,0.30);
+    --warn-stripe:#E0A868;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -5%, rgba(224,168,104,0.35), transparent 60%),
+      radial-gradient(ellipse 800px 600px at 90% 10%, rgba(201,123,132,0.20), transparent 55%),
+      radial-gradient(ellipse 1000px 700px at 50% 100%, rgba(233,226,241,0.6), transparent 60%),
+      linear-gradient(160deg, var(--bg-cream), var(--bg-lav) 55%, var(--bg-peach));
+    background-attachment:fixed;
+  }
+  .display{ font-family:'Fraunces', serif; }
+  .mono{ font-family:'IBM Plex Mono', monospace; letter-spacing:0.02em; }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    padding:5.5rem 1.5rem 4.5rem;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    overflow:hidden;
+  }
+  .light-leak{
+    position:absolute;
+    border-radius:50%;
+    filter:blur(60px);
+    opacity:0.55;
+    pointer-events:none;
+    animation:drift 18s ease-in-out infinite;
+  }
+  .light-leak.one{ width:420px; height:420px; background:radial-gradient(circle, #F6D9A8, transparent 70%); top:-140px; left:-120px; animation-delay:0s; }
+  .light-leak.two{ width:360px; height:360px; background:radial-gradient(circle, #E6C9EF, transparent 70%); top:-80px; right:-100px; animation-delay:-6s; }
+  .light-leak.three{ width:300px; height:300px; background:radial-gradient(circle, #F0B98A, transparent 70%); bottom:-160px; left:38%; animation-delay:-12s; }
+  @keyframes drift{
+    0%,100%{ transform:translate(0,0) scale(1); }
+    50%{ transform:translate(20px,25px) scale(1.08); }
+  }
+  .grain{
+    position:fixed; inset:0;
+    pointer-events:none;
+    opacity:0.035;
+    z-index:1;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .wordmark{
+    position:relative;
+    z-index:2;
+    font-size:clamp(3rem, 9vw, 5rem);
+    font-weight:500;
+    letter-spacing:0.01em;
+    color:var(--ink);
+    margin-bottom:0.3rem;
+  }
+  .wordmark em{
+    font-style:italic;
+    color:var(--amber);
+  }
+  .eyebrow{
+    position:relative;
+    font-size:0.72rem;
+    text-transform:uppercase;
+    color:var(--ink-muted);
+    letter-spacing:0.16em;
+    margin-bottom:2.2rem;
+    z-index:2;
+  }
+  .polaroid{
+    position:relative;
+    z-index:2;
+    width:min(320px, 78vw);
+    background:#fffdf9;
+    border-radius:2px;
+    padding:14px 14px 46px;
+    box-shadow:0 30px 70px -25px rgba(120,90,50,0.35), 0 0 0 1px rgba(43,42,51,0.06);
+    transform:rotate(-2.5deg);
+    margin-bottom:2.4rem;
+  }
+  .polaroid-frame{
+    width:100%;
+    aspect-ratio:4/5;
+    border-radius:1px;
+    background-image:url("https://images.stockcake.com/public/b/f/0/bf0ace99-1f59-46bc-97e6-e20a136f47c9_large/vintage-diner-fun-stockcake.jpg");
+    background-size:cover;
+    background-position:center 30%;
+    position:relative;
+    overflow:hidden;
+  }
+  .polaroid-frame::before{
+    content:"";
+    position:absolute; inset:0;
+    background:linear-gradient(160deg, #F3D9AE, #E8B98C 45%, #D99C7A 100%);
+    animation:reveal 2.8s ease-out 0.3s both;
+  }
+  .polaroid-frame::after{
+    content:"";
+    position:absolute; inset:0;
+    background:repeating-linear-gradient(0deg, rgba(255,255,255,0.06) 0 1px, transparent 1px 3px);
+    mix-blend-mode:overlay;
+    pointer-events:none;
+  }
+  @keyframes reveal{
+    0%{ opacity:1; }
+    100%{ opacity:0; }
+  }
+  .polaroid-caption{
+    text-align:left;
+    font-size:0.8rem;
+    color:#9B9488;
+    margin-top:12px;
+    padding-left:2px;
+  }
+  h1.display{
+    position:relative;
+    z-index:2;
+    font-size:clamp(2.3rem, 5.5vw, 3.6rem);
+    font-weight:500;
+    line-height:1.05;
+    margin:0 0 0.9rem;
+    max-width:16ch;
+    color:var(--ink);
+  }
+  h1.display em{
+    font-style:italic;
+    color:var(--amber);
+  }
+  .hero p{
+    position:relative;
+    z-index:2;
+    max-width:44ch;
+    color:var(--ink-soft);
+    font-size:1.02rem;
+    line-height:1.55;
+    margin:0;
+  }
+
+  /* ---------- FORM ---------- */
+  .stage{
+    position:relative;
+    z-index:2;
+    max-width:720px;
+    margin:0 auto;
+    padding:4rem 1.5rem 2rem;
+  }
+  .section-label{
+    display:flex;
+    align-items:baseline;
+    gap:0.6rem;
+    margin-bottom:0.9rem;
+  }
+  .section-num{
+    font-size:0.72rem;
+    color:var(--amber-soft);
+  }
+  .section-title{
+    font-size:0.95rem;
+    font-weight:600;
+    color:var(--ink);
+  }
+  .card{
+    background:var(--panel);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    border:1px solid var(--panel-line);
+    border-radius:10px;
+    padding:1.6rem;
+    margin-bottom:1.4rem;
+    box-shadow:0 20px 40px -30px rgba(90,60,30,0.25);
+  }
+
+  .dropzone{
+    border:1.5px dashed rgba(43,42,51,0.18);
+    border-radius:8px;
+    padding:2.2rem 1.4rem;
+    text-align:center;
+    cursor:pointer;
+    transition:border-color 0.2s ease, background 0.2s ease;
+  }
+  .dropzone:hover, .dropzone.drag{
+    border-color:var(--amber);
+    background:var(--amber-bg);
+  }
+  .dropzone p{ margin:0.2rem 0 0; color:var(--ink-muted); font-size:0.88rem; }
+  .dropzone .dz-title{ color:var(--ink); font-size:0.95rem; font-weight:500; }
+  .dropzone input{ display:none; }
+
+  .thumbs{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:1rem;
+  }
+  .thumb{
+    width:64px; height:64px;
+    border-radius:6px;
+    background-size:cover;
+    background-position:center;
+    border:1px solid var(--panel-line);
+    position:relative;
+  }
+  .thumb button{
+    position:absolute; top:-6px; right:-6px;
+    width:18px; height:18px;
+    border-radius:50%;
+    border:none;
+    background:var(--ink);
+    color:#fff;
+    font-size:0.65rem;
+    cursor:pointer;
+    line-height:18px;
+    padding:0;
+  }
+
+  textarea{
+    width:100%;
+    background:rgba(255,255,255,0.7);
+    border:1px solid var(--panel-line);
+    border-radius:8px;
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:0.92rem;
+    padding:0.9rem 1rem;
+    min-height:100px;
+    resize:vertical;
+  }
+  textarea::placeholder{ color:#B0AABE; }
+  textarea:focus, .dropzone:focus-visible, button:focus-visible, .chip input:focus-visible + label{
+    outline:2px solid var(--amber);
+    outline-offset:2px;
+  }
+  .char-count{
+    text-align:right;
+    font-size:0.72rem;
+    color:var(--ink-muted);
+    margin-top:0.4rem;
+  }
+
+  .row{
+    display:flex;
+    gap:1.2rem;
+    flex-wrap:wrap;
+  }
+  .field-group{ flex:1; min-width:220px; }
+  .field-label{
+    font-size:0.78rem;
+    color:var(--ink-muted);
+    margin-bottom:0.6rem;
+  }
+  .chips{ display:flex; gap:0.6rem; flex-wrap:wrap; }
+  .chip input{ position:absolute; opacity:0; }
+  .chip label{
+    display:block;
+    padding:0.55rem 0.95rem;
+    border:1px solid var(--panel-line);
+    border-radius:100px;
+    font-size:0.84rem;
+    cursor:pointer;
+    color:var(--ink-muted);
+    background:rgba(255,255,255,0.4);
+    transition:all 0.15s ease;
+  }
+  .chip input:checked + label{
+    border-color:var(--amber);
+    color:var(--amber);
+    background:var(--amber-bg);
+  }
+
+  .duration-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding-top:0.4rem;
+  }
+  .duration-value{
+    font-family:'IBM Plex Mono', monospace;
+    color:var(--amber);
+    font-size:0.9rem;
+  }
+  input[type="range"]{
+    width:100%;
+    accent-color:#C9752E;
+    margin-top:0.6rem;
+  }
+  .duration-note{
+    font-size:0.76rem;
+    color:var(--ink-muted);
+    margin-top:0.5rem;
+  }
+
+  .generate-btn{
+    width:100%;
+    background:var(--amber);
+    color:#FFF8ED;
+    border:none;
+    border-radius:8px;
+    padding:1rem;
+    font-size:0.98rem;
+    font-weight:600;
+    cursor:pointer;
+    transition:filter 0.15s ease, transform 0.1s ease;
+    box-shadow:0 14px 30px -14px rgba(201,117,46,0.55);
+  }
+  .generate-btn:hover{ filter:brightness(1.06); }
+  .generate-btn:active{ transform:scale(0.995); }
+  .generate-btn:disabled{
+    background:#E4DED3;
+    color:#A39D8F;
+    cursor:not-allowed;
+    box-shadow:none;
+  }
+
+  .status{
+    margin-top:1rem;
+    font-size:0.85rem;
+    color:var(--ink-muted);
+    display:none;
+  }
+  .status.show{ display:block; }
+  .status .dot{
+    display:inline-block;
+    width:6px; height:6px;
+    border-radius:50%;
+    background:var(--amber);
+    margin-right:8px;
+    animation:pulse 1.1s ease-in-out infinite;
+  }
+  @keyframes pulse{ 0%,100%{opacity:0.35;} 50%{opacity:1;} }
+
+  /* ---------- WARNINGS ---------- */
+  .warn-wrap{
+    margin-top:3rem;
+    border:1px solid var(--warn-line);
+    border-radius:10px;
+    overflow:hidden;
+    background:var(--warn-bg);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+  }
+  .warn-header{
+    padding:0.9rem 1.4rem;
+    background:repeating-linear-gradient(
+      -45deg,
+      var(--warn-stripe), var(--warn-stripe) 10px,
+      #F6E4C8 10px, #F6E4C8 20px
+    );
+    display:flex;
+    align-items:center;
+    gap:0.6rem;
+  }
+  .warn-header span{
+    font-size:0.75rem;
+    color:#fff;
+    background:var(--ink);
+    padding:0.2rem 0.6rem;
+    border-radius:3px;
+    font-weight:600;
+  }
+  .warn-list{
+    padding:1.2rem 1.4rem 1.4rem;
+    list-style:none;
+    margin:0;
+  }
+  .warn-list li{
+    font-size:0.86rem;
+    line-height:1.55;
+    color:var(--ink-soft);
+    padding:0.6rem 0;
+    border-bottom:1px solid rgba(43,42,51,0.07);
+    display:flex;
+    gap:0.7rem;
+  }
+  .warn-list li:last-child{ border-bottom:none; }
+  .warn-list b{
+    color:var(--ink);
+    font-weight:600;
+  }
+  .warn-tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.68rem;
+    color:var(--amber);
+    flex-shrink:0;
+    padding-top:0.15rem;
+  }
+
+  footer{
+    position:relative;
+    z-index:2;
+    text-align:center;
+    padding:3rem 1.5rem 4rem;
+    color:var(--ink-muted);
+    font-size:0.78rem;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .polaroid-frame::before{ animation:none; opacity:1; filter:none; }
+    .status .dot{ animation:none; }
+    .light-leak{ animation:none; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="grain"></div>
+
+  <section class="hero">
+    <div class="light-leak one"></div>
+    <div class="light-leak two"></div>
+    <div class="light-leak three"></div>
+    <div class="wordmark display"><em>Yaa</em>dein</div>
+    <div class="eyebrow mono">MEMORY RECREATION</div>
+    <div class="polaroid">
+      <div class="polaroid-frame"></div>
+      <div class="polaroid-caption mono">the night before biology, 2014</div>
+    </div>
+    <h1 class="display">Describe it. Watch it <em>develop</em>.</h1>
+    <p>Upload a few photos, tell us what happened, and we'll turn the memory into a short video scene — with the actual people from your pictures.</p>
+  </section>
+
+  <main class="stage">
+
+    <div class="section-label">
+      <span class="section-num mono">01</span>
+      <span class="section-title">Upload photos</span>
+    </div>
+    <div class="card">
+      <label class="dropzone" id="dropzone" tabindex="0">
+        <div class="dz-title">Click to upload, or drag photos here</div>
+        <p>Up to 3 reference images work best — clear faces, good lighting</p>
+        <input type="file" id="fileInput" accept="image/*,.heic,.heif" multiple>
+      </label>
+      <div class="thumbs" id="thumbs"></div>
+    </div>
+
+    <div class="section-label">
+      <span class="section-num mono">02</span>
+      <span class="section-title">Describe the memory</span>
+    </div>
+    <div class="card">
+      <textarea id="memoryText" maxlength="400" placeholder="e.g. Three of us cramming for the biology final at 2am, energy drinks everywhere, someone's laughing so hard they fall off the chair..."></textarea>
+      <div class="char-count mono"><span id="charCount">0</span>/400</div>
+    </div>
+
+    <div class="section-label">
+      <span class="section-num mono">03</span>
+      <span class="section-title">Format</span>
+    </div>
+    <div class="card">
+      <div class="row">
+        <div class="field-group">
+          <div class="field-label">Aspect ratio</div>
+          <div class="chips">
+            <div class="chip">
+              <input type="radio" name="ratio" id="ratio-916" checked>
+              <label for="ratio-916">9:16 — reels & stories</label>
+            </div>
+            <div class="chip">
+              <input type="radio" name="ratio" id="ratio-169">
+              <label for="ratio-169">16:9 — widescreen</label>
+            </div>
+          </div>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Audio</div>
+          <div class="chips">
+            <div class="chip">
+              <input type="radio" name="audio" id="audio-dialogue" checked>
+              <label for="audio-dialogue">Dialogue</label>
+            </div>
+            <div class="chip">
+              <input type="radio" name="audio" id="audio-music">
+              <label for="audio-music">Music only</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:1.4rem;">
+        <div class="duration-row">
+          <div class="field-label" style="margin:0;">Duration</div>
+          <div class="duration-value mono" id="durationValue">10s</div>
+        </div>
+        <input type="range" id="durationSlider" min="4" max="10" step="1" value="10">
+        <div class="duration-note">Capped at 10s — the current max for a single generation on this model.</div>
+      </div>
+    </div>
+
+    <button class="generate-btn" id="generateBtn" disabled>Add photos and a description to continue</button>
+    <div class="status" id="status"><span class="dot"></span><span id="statusText">Developing your memory…</span></div>
+    <video id="resultVideo" controls style="width:100%;border-radius:8px;margin-top:1rem;display:none;"></video>
+
+    <div class="warn-wrap">
+      <div class="warn-header">
+        <span>READ BEFORE GENERATING</span>
+      </div>
+      <ul class="warn-list">
+        <li><span class="warn-tag">PEOPLE</span><span>Some faces won't be accepted for generation — there's no way to check in advance, so a rejection doesn't mean you did anything wrong. Try a different photo of the same person if this happens.</span></li>
+        <li><span class="warn-tag">MINORS</span><span>Photos of anyone under 18 <b>cannot</b> be used if you're generating from the EU, UK, or Switzerland.</span></li>
+        <li><span class="warn-tag">LENGTH</span><span>Every memory comes out as one <b>10-second clip</b>. Longer scenes aren't supported yet — think of it as a single vivid beat, not a full story.</span></li>
+        <li><span class="warn-tag">CUTS</span><span>If your description implies multiple moments ("we studied, then ordered food, then fell asleep"), expect the model to pick <b>one</b> moment rather than cut between all three.</span></li>
+        <li><span class="warn-tag">QUALITY</span><span>Output is 720p. It won't look like a phone-shot video — treat it as an impression of the memory, not a recreation of the original photo.</span></li>
+        <li><span class="warn-tag">LANGUAGE</span><span>Descriptions work best in English. Other languages may generate unpredictable results.</span></li>
+        <li><span class="warn-tag">WATERMARK</span><span>Every clip carries an invisible AI watermark (SynthID). This can't be removed and isn't meant to be.</span></li>
+        <li><span class="warn-tag">RETRY</span><span>If a generation fails or gets blocked, you won't be charged for it — but you will need to try again, possibly with a different photo or a softer description.</span></li>
+      </ul>
+    </div>
+
+  </main>
+
+  <footer class="mono">YAADEIN · a memory, recreated · prototype build</footer>
+
+<script>
+  const fileInput = document.getElementById('fileInput');
+  const dropzone = document.getElementById('dropzone');
+  const thumbs = document.getElementById('thumbs');
+  const memoryText = document.getElementById('memoryText');
+  const charCount = document.getElementById('charCount');
+  const generateBtn = document.getElementById('generateBtn');
+  const durationSlider = document.getElementById('durationSlider');
+  const durationValue = document.getElementById('durationValue');
+  const status = document.getElementById('status');
+  const statusText = document.getElementById('statusText');
+
+  let uploadedFiles = [];
+
+  function renderThumbs(){
+    thumbs.innerHTML = '';
+    uploadedFiles.forEach((file, i) => {
+      const url = URL.createObjectURL(file);
+      const div = document.createElement('div');
+      div.className = 'thumb';
+      div.style.backgroundImage = `url(${url})`;
+      const btn = document.createElement('button');
+      btn.textContent = '×';
+      btn.setAttribute('aria-label', 'Remove photo');
+      btn.onclick = () => { uploadedFiles.splice(i, 1); renderThumbs(); checkReady(); };
+      div.appendChild(btn);
+      thumbs.appendChild(div);
+    });
+  }
+
+  function addFiles(fileList){
+    const incoming = Array.from(fileList).slice(0, 3 - uploadedFiles.length);
+    uploadedFiles = uploadedFiles.concat(incoming);
+    renderThumbs();
+    checkReady();
+  }
+
+  fileInput.addEventListener('change', e => addFiles(e.target.files));
+
+  // Removed: dropzone.addEventListener('click', ...) — the input is nested
+  // inside the <label>, so clicking it already opens the file picker
+  // natively. Adding a second fileInput.click() on top of that was firing
+  // the picker twice in one tap, which on phones (especially iOS Safari)
+  // just cancels the interaction instead of opening it.
+  dropzone.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); } });
+  dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('drag'); });
+  dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag'));
+  dropzone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropzone.classList.remove('drag');
+    addFiles(e.dataTransfer.files);
+  });
+
+  memoryText.addEventListener('input', () => {
+    charCount.textContent = memoryText.value.length;
+    checkReady();
+  });
+
+  durationSlider.addEventListener('input', () => {
+    durationValue.textContent = durationSlider.value + 's';
+  });
+
+  function checkReady(){
+    const ready = uploadedFiles.length > 0 && memoryText.value.trim().length > 10;
+    generateBtn.disabled = !ready;
+    generateBtn.textContent = ready ? 'Recreate this memory' : 'Add photos and a description to continue';
+  }
+
+  const resultVideo = document.getElementById('resultVideo');
+
+  function fileToBase64(file){
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result.split(',')[1]); // strip data: prefix
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function pollStatus(fileId, attempt = 0){
+    const MAX_ATTEMPTS = 40; // ~2 minutes at 3s intervals — a safety net, not the normal path
+
+    if(attempt >= MAX_ATTEMPTS){
+      statusText.textContent = 'This is taking longer than expected — try again in a bit.';
+      generateBtn.disabled = false;
+      generateBtn.textContent = 'Try again';
+      return;
+    }
+
+    const res = await fetch(`/api/status?fileId=${fileId}`);
+    const data = await res.json();
+
+    if(data.status === 'ready'){
+      statusText.textContent = 'Ready.';
+      resultVideo.src = data.downloadUrl;
+      resultVideo.style.display = 'block';
+      generateBtn.disabled = false;
+      generateBtn.textContent = 'Recreate this memory';
+      return;
+    }
+    if(data.status === 'failed'){
+      statusText.textContent = data.error || 'Generation failed — try a different photo or a softer description.';
+      generateBtn.disabled = false;
+      generateBtn.textContent = 'Try again';
+      return;
+    }
+    // still processing — check again in a few seconds
+    setTimeout(() => pollStatus(fileId, attempt + 1), 3000);
+  }
+
+  generateBtn.addEventListener('click', async () => {
+    generateBtn.disabled = true;
+    status.classList.add('show');
+    resultVideo.style.display = 'none';
+    statusText.textContent = 'Reading your photos…';
+
+    try {
+      const images = await Promise.all(
+        uploadedFiles.map(async (file) => ({
+          data: await fileToBase64(file),
+          mimeType: file.type,
+        }))
+      );
+
+      const aspectRatio = document.getElementById('ratio-916').checked ? '9:16' : '16:9';
+      const audioMode = document.getElementById('audio-music').checked ? 'music' : 'dialogue';
+      const duration = durationSlider.value;
+
+      statusText.textContent = 'Shaping the scene…';
+
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          images,
+          description: memoryText.value.trim(),
+          aspectRatio,
+          audioMode,
+          duration,
+        }),
+      });
+
+      const data = await res.json();
+
+      if(!res.ok){
+        statusText.textContent = data.error || 'Something went wrong. Try again.';
+        generateBtn.disabled = false;
+        generateBtn.textContent = 'Try again';
+        return;
+      }
+
+      if(data.status === 'complete' && data.videoData){
+        statusText.textContent = 'Ready.';
+        resultVideo.src = `data:video/mp4;base64,${data.videoData}`;
+        resultVideo.style.display = 'block';
+        generateBtn.disabled = false;
+        generateBtn.textContent = 'Recreate this memory';
+        return;
+      }
+
+      statusText.textContent = 'Rendering the moment…';
+      pollStatus(data.fileId);
+
+    } catch (err) {
+      statusText.textContent = 'Something went wrong: ' + err.message;
+      generateBtn.disabled = false;
+      generateBtn.textContent = 'Try again';
+    }
+  });
+</script>
+
+</body>
 </html>
